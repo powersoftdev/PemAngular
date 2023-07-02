@@ -1,0 +1,205 @@
+<app-sidebar></app-sidebar>
+
+
+<div class="page-wrapper">
+
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-head-box">
+                    <h3>Employee Activity List</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Activity List</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <!-- Search Filter -->
+        <div class="row filter-row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="add-emp-section">
+                    <a id="add-act-btn" class="btn btn-success btn-add-emp" data-bs-toggle="modal" data-bs-target="#add_activity"
+                        style="width: auto;"><i class="fas fa-plus"></i> Add Activity</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <dx-data-grid
+          id="gridContainer"
+          [dataSource]="activityData"
+          [remoteOperations]="false"
+          [allowColumnReordering]="true"
+          [rowAlternationEnabled]="true"
+          [showBorders]="true"
+          (onContentReady)="contentReady($event)"
+          (onExporting)="onExporting($event)"
+    
+        >
+    
+         <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+          <dxo-scrolling mode="virtual"></dxo-scrolling>
+          <dxi-column dataField="Action" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                      cellTemplate="activityData"></dxi-column>
+          <div *dxTemplate="let data of 'activityData'">
+    
+            <a data-bs-toggle="modal" data-bs-target="#edit_activity">
+              <i class="fas fa-edit editbtn"
+                 (click)="editactivity(data)"></i></a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="#" data-bs-toggle="modal" data-bs-target="#delete_activity">
+              <i class="fa fa-times deleteBtn"
+                 aria-hidden="true" (click)="deleteData(data.data.employeeActivityTypeId)"></i></a>
+          </div>
+          <dxi-column type="button"[width]="110">
+            <dxi-button name="edit"></dxi-button>
+            <dxi-button name="delete"></dxi-button>
+          </dxi-column>
+    
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[10, 25, 50, 100]"
+          ></dxo-pager>
+          <dxo-search-panel
+            [visible]="true"
+            [highlightCaseSensitive]="true"
+          ></dxo-search-panel>
+          <dxo-group-panel [visible]="true"></dxo-group-panel>
+          <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+          <dxo-export
+            [enabled]="true"
+            [formats]="['Excel']"
+            [allowExportSelectedData]="true"
+          >
+          </dxo-export>  
+
+          <dxo-filter-row [visible] = "true"></dxo-filter-row>
+          <dxi-column [allowFiltering] = "false"></dxi-column>
+    
+          <dxi-column dataField="employeeActivityTypeId" dataType="string">Employee Activity Id</dxi-column>
+          <dxi-column dataField="employeeActivityTypeDescription" dataType="string">Employee Activity Type Description</dxi-column>
+        </dx-data-grid>
+
+        <!-- Add activity Modal -->
+        <div id="add_activity" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Activity</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times" #closeBtn></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="activityForm">
+                            <div class="form-group">
+                                <label>Employee Activity Type Id<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="employeeActivityTypeId" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': activityForm.get('employeeActivityTypeId')?.invalid &&
+                            (activityForm.get('employeeActivityTypeId')?.dirty || activityForm.get('employeeActivityTypeId')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Employee Activity Type Description<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="employeeActivityTypeDescription" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': activityForm.get('employeeActivityTypeDescription')?.invalid &&
+                            (activityForm.get('employeeActivityTypeDescription')?.dirty || activityForm.get('employeeActivityTypeDescription')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                            </div>
+                            <div class="submit-section">
+                                <button class="btn btn-primary cancel-btn" data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+                                <button class="btn btn-primary submit-btn" (click)="Add()">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Add activity Modal -->
+
+
+        <!-- Edit activity Modal -->
+        <div id="edit_activity" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Activity</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times" #closeupdatebtn></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="activityForm">
+
+                            <div class="form-group">
+                                <label>Employee Activity Type ID<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="employeeActivityTypeId" type="text">
+
+                            </div>
+                            <div class="form-group">
+                                <label>Employee Activity Type Description<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="employeeActivityTypeDescription" type="text">
+                            </div>
+                            <div class="submit-section">
+                                <button class="btn btn-primary cancel-btn" data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+
+                                <button class="btn btn-primary submit-btn" (click)="Update()">Update</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Edit activity Modal -->
+
+
+        <!-- Delete activity Modal -->
+        <div class="modal custom-modal fade" id="delete_activity" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h3>Delete Activity</h3>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times" #closedeletebtn></i>
+                            </button>
+                            <p>Are you sure want to delete?</p>
+                        </div>
+                        <div class="modal-btn delete-action">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a class="btn btn-primary continue-btn"
+                                        (click)="Delete(activityData.employeeActivityTypeId)">Delete</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                        class="btn btn-primary cancel-btn">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Delete Activity Modal -->
+
+    </div>

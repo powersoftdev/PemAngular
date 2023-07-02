@@ -1,0 +1,51 @@
+<app-sidebar></app-sidebar>
+<div class="page-wrapper">
+<div class="content container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-head-box">
+                <h3>Latness Details Report</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a routerLink="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Lateness Details Report
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+        <div class="container border-dark">
+            <div class="long-title">
+                <dx-data-grid id="gridContainer" [dataSource]="LatenessData" [allowColumnReordering]="true"
+                    [showBorders]="true" (onExporting)="onExporting($event)">
+
+                    <!-- <dxi-column [width]="200" caption="Sr. No" dataField="" cellTemplate=""></dxi-column> -->
+                    <dxi-column caption="Employee Id" dataField="employeeId"></dxi-column>
+                    <dxi-column caption="Employee Name" dataField="name"></dxi-column>
+                    <dxi-column caption="FirstName" dataField="firstName"></dxi-column>
+                    <dxi-column caption="LastName" dataField="lastName"></dxi-column>
+                    <dxi-column caption="Date" dataField="date"></dxi-column>
+                    <dxi-column caption="Time In Minutes" dataField="timeInMinutes"></dxi-column>
+
+                    <dxo-selection mode="multiple"></dxo-selection>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+
+                    <dxo-export [enabled]="true" [formats]="['xlsx','pdf','csv']" [allowExportSelectedData]="true"></dxo-export>
+
+                    <dxo-group-panel [visible]="true">  </dxo-group-panel>
+
+                    <dxo-search-panel    [visible]="true"   [width]="240"  placeholder="Search..." ></dxo-search-panel>
+
+                    <dxo-column-chooser    [enabled]="true"   mode="select">  </dxo-column-chooser>
+                    
+                    <dxo-grouping  [contextMenuEnabled]="true">  </dxo-grouping>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>

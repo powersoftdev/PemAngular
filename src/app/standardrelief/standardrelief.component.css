@@ -1,0 +1,23 @@
+/* Validation */
+input.invalid.touched,
+select.invalid.touched{
+    border: 1px solid red;
+    box-shadow: inset 0 0 13 ;
+}
+
+.mat-form-field {
+    margin-right: 12px;
+  }
+
+  .btn-danger{
+    background-color: red;
+  }
+ .submit-btn{
+  background-color: green;
+ }
+
+ #add-standardR-btn {
+  color: white;
+  background-color:#482fe9;
+}
+

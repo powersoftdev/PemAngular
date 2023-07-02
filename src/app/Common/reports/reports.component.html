@@ -1,0 +1,43 @@
+<app-sidebar></app-sidebar>
+
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-head-box">
+                    <h3>Reports</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a>Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Reports</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+        <div class="container border-dark">
+            <div class="text-center">
+                <h1>Payroll Employee Management</h1>
+                <h3>Report Page </h3>
+            </div>
+
+            <dx-data-grid id="gridContainer" [dataSource]="designationData" [allowColumnReordering]="true"
+                [showBorders]="true" (onExporting)="onExporting($event)">
+                
+                <!-- <dxi-column [width]="200" caption="Sr. No" dataField="" cellTemplate=""></dxi-column> -->
+                <dxi-column caption="Designation Id" dataField="designationId"></dxi-column>
+                <dxi-column caption="Designation Description" dataField="designDescription"></dxi-column>
+
+
+                <dxo-selection mode="multiple"></dxo-selection>
+                <dxo-paging [pageSize]="10"></dxo-paging>
+
+                <dxo-export [enabled]="true" [formats]="['xlsx','pdf']" [allowExportSelectedData]="true"></dxo-export>
+                
+            </dx-data-grid>
+             
+        </div>
+    </div>
+</div>

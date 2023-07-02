@@ -1,0 +1,76 @@
+.top{
+    margin-top: 5rem;
+}
+
+.left{
+    margin-left: 2rem;
+}
+.left-s{
+    margin-left: 10rem;
+}
+.bottom-button{
+    margin-bottom: 2rem;
+}
+
+.button-login{
+  background-color: coral;
+ 
+}
+
+/* Validation */
+input.invalid.touched,
+select.invalid.touched{
+    border: 1px solid red;
+    box-shadow: inset 0 0 13 ;
+}
+
+.loader {
+    display: inline-block;
+    border: 4px solid #f3f3f3; /* Loader color */
+    border-top: 4px solid #3498db; /* Loader color */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 5px; /* Adjust spacing between loader and button text */
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+
+
+
+
+
+
+.login{
+    margin-top: 3rem; 
+    text-align: center; 
+    color: #4005f2;
+    font-size: xx-large;
+}
+.center{
+
+    width: 23rem;
+}
+.pass{
+    width: 23rem;
+}
+.register{
+    color: #4005f2;
+}
+.button-bg{
+    background-color: #4005f2;
+    color: white;
+}
+.text{
+    margin-left:2rem ;
+}

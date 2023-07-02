@@ -1,0 +1,47 @@
+export class Bank {
+    companyId: string; 
+      divisionId: string; 
+      departmentId: string; 
+      bankId:string;
+      bankAccountNumber: number;
+      lockedBy: string;
+      lockTs: Date;
+      bankName: string;
+      bankAddress1: string;
+      bankAddress2: string; 
+      bankCity:string; 
+      bankState: string;
+      bankZip: string;
+      bankCountry: string; 
+      bankPhone: string;
+      bankFax: string;
+      bankContactName: string;
+      bankEmail: string;
+      bankWebsite:string;
+      swiftCode: string;
+      routingCode: string; 
+      currencyId: string; 
+      currencyExchangeRate: any;
+      nextCheckNumber:  any;
+      nextDepositNumber: any;
+      balance: any;
+      unpostedDeposits: any;
+      glbankAccount: string;
+      notes:  string;
+      correspondentBankId: string;
+      approved: boolean;
+      approvedBy: string;
+      approvedDate: Date;
+      enteredBy: string;
+      bankAccountTypeId: string;
+      chequeDate: Date;
+      chequeNo: string;
+      firstSign: string;
+      secondSign: string;
+      firstDesign: string;
+      secondDesign: string;
+      branchCode: any;
+      data:string;
+    status: string;
+  
+}

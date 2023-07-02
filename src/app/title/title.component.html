@@ -1,0 +1,212 @@
+<app-sidebar></app-sidebar>
+
+
+<div class="page-wrapper">
+
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-head-box">
+                    <h3>Title</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Title</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <!-- Search Filter -->
+        <div class="row filter-row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="add-emp-section">
+                    <a id="add-title-btn" class="btn btn-success btn-add-emp" data-bs-toggle="modal" data-bs-target="#add_title"
+                        style="width: auto;"><i class="fas fa-plus"></i> Add
+                        Title</a>
+                </div>
+            </div>
+        </div>
+       <hr>
+       <dx-data-grid
+       id="gridContainer"
+       [dataSource]="titleData"
+       [remoteOperations]="false"
+       [allowColumnReordering]="true"
+       [rowAlternationEnabled]="true"
+       [showBorders]="true"
+       (onContentReady)="contentReady($event)"
+       (onExporting)="onExporting($event)"
+ 
+     >
+ 
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+     <dxo-group-panel [visible]="true"></dxo-group-panel>
+       <dxo-scrolling mode="virtual"></dxo-scrolling>
+       <dxi-column dataField="Action" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                   cellTemplate="titleData"></dxi-column>
+       <div *dxTemplate="let data of 'titleData'">
+ 
+         <a data-bs-toggle="modal" data-bs-target="#edit_title">
+           <i class="fas fa-edit editbtn"
+              (click)="editTitle(data)"></i></a>
+         &nbsp;&nbsp;&nbsp;
+         <a href="#" data-bs-toggle="modal" data-bs-target="#delete_title">
+           <i class="fa fa-times deleteBtn"
+              aria-hidden="true" (click)="deleteData(data.data.loanTypeId)"></i></a>
+       </div>
+       <dxi-column type="button"[width]="110">
+         <dxi-button name="edit"></dxi-button>
+         <dxi-button name="delete"></dxi-button>
+       </dxi-column>
+ 
+       <dxo-paging [pageSize]="10"></dxo-paging>
+       <dxo-pager
+         [showPageSizeSelector]="true"
+         [allowedPageSizes]="[10, 25, 50, 100]"
+       ></dxo-pager>
+       <dxo-search-panel
+         [visible]="true"
+         [highlightCaseSensitive]="true"
+       ></dxo-search-panel>
+       <dxo-group-panel [visible]="true"></dxo-group-panel>
+       <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+       <dxo-export
+         [enabled]="true"
+         [formats]="['Excel']"
+         [allowExportSelectedData]="true">
+       </dxo-export>
+       
+       <dxo-filter-row [visible] = "true"></dxo-filter-row>
+          <dxi-column [allowFiltering] = "false"></dxi-column>
+
+       <dxo-editing  mode="row"
+        [allowAdding] = "true"
+        [allowDeleting]="true"
+        [useIcons]="true"
+        [allowUpdating] = "true"></dxo-editing>
+
+       <dxi-column dataField="titleId" dataType="string">Title Id</dxi-column>
+       <dxi-column dataField="titleDescription" dataType="string">Title Description</dxi-column>
+     </dx-data-grid>
+
+        <!-- Add Title Modal -->
+        <div id="add_title" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Title</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times" #closeBtn></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="TitleForm">
+                            <div class="form-group">
+                                <label>Title Id <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="titleId" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': TitleForm.get('titleId')?.invalid &&
+                            (TitleForm.get('titleId')?.dirty || TitleForm.get('titleId')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Title Description <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="titleDescription" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': TitleForm.get('titleDescription')?.invalid &&
+                            (TitleForm.get('titleDescription')?.dirty || TitleForm.get('titleDescription')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                            </div>
+                            <div class="submit-section">
+                                <button class="btn btn-danger cancel-btn" data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+                                <button class="btn btn-success submit-btn" (click)="Add()">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Add Title Modal -->
+
+        <!-- Edit Title Modal -->
+        <div id="edit_title" class="modal custom-modal fade" role="dialog" tabindex="-1" aria-labelledby="add_title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Title</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times" #closeupdatebtn></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="TitleForm">
+
+                            <div class="form-group-row">
+                                <label for="titleId" class="col-form-label">Title Id <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="titleId"  id="titleId" type="text"
+                                [ngClass]="{'form-control': true, 'is-invalid': TitleForm.get('titleId')?.invalid &&
+                            (TitleForm.get('titleId')?.dirty || TitleForm.get('titleId')?.touched)}">
+                            </div>
+                            <div class="form-group">
+                                <label>Title Description <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="titleDescription" type="text">
+                            </div>
+                            <div class="submit-section">
+                                <button class="btn cancel-btn btn-danger" data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+
+                                <button class="btn btn-primary submit-btn btn-success" (click)="Update()">Update</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Edit Title Modal -->
+
+
+        <!-- Delete Title Modal -->
+        <div class="modal custom-modal fade" id="delete_title" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h3>Delete Title</h3>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times" #closedeletebtn></i>
+                            </button>
+                            <p>Are you sure you want to delete?</p>
+                        </div>
+                        <div class="modal-btn delete-action">
+                            <div class="row">
+                                <div class="col-6">
+
+                                    <a class="btn continue-btn btn-danger"
+                                        (click)="Delete(titleData.titleId)">Delete</a>
+
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                        class="btn btn-primary cancel-btn">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Delete Title Modal -->
+    </div>
+</div>

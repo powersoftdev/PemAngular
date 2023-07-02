@@ -1,0 +1,259 @@
+<app-sidebar></app-sidebar>
+
+
+<div class="page-wrapper">
+
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-head-box">
+                    <h3>CourseType</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">CourseType</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <!-- Search Filter -->
+        <div class="row filter-row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+                <div class="add-emp-section">
+                    <a id="add-cos-btn"  class="btn btn-success btn-add-emp" data-bs-toggle="modal" data-bs-target="#add_courseType"
+                        style="width: auto;"><i class="fas fa-plus"></i> Add
+                        CourseType</a>
+                </div>
+            </div>
+        </div>
+      
+        <hr>
+        <!-- /Search Filter -->
+        <dx-data-grid
+        id="gridContainer"
+        [dataSource]="coursetypeData"
+        [remoteOperations]="false"
+        [allowColumnReordering]="true"
+        [rowAlternationEnabled]="true"
+        [showBorders]="true"
+        (onContentReady)="contentReady($event)"
+        (onExporting)="onExporting($event)"
+  
+      >
+  <!--      <dxo-filter-row [visible]="true"></dxo-filter-row>-->
+       <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxi-column dataField="Action" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                    cellTemplate="coursetypeData"></dxi-column>
+        <div *dxTemplate="let data of 'coursetypeData'">
+  
+          <a data-bs-toggle="modal" data-bs-target="#edit_courseType">
+            <i class="fas fa-edit editbtn"
+               (click)="editCoursetype(data)"></i></a>
+          &nbsp;&nbsp;&nbsp;
+          <a href="#" data-bs-toggle="modal" data-bs-target="#delete_courseType">
+            <i class="fa fa-times deleteBtn"
+               aria-hidden="true" (click)="deleteData(data.data)"></i></a>
+        </div>
+
+        <dxo-editing  mode="row"
+        [allowAdding] = "true"
+        [allowDeleting]="true"
+        [useIcons]="true"
+        [allowUpdating] = "true"></dxo-editing>
+  
+        <dxo-filter-row [visible] = "true"></dxo-filter-row>
+          <dxi-column [allowFiltering] = "false"></dxi-column>
+          
+        <dxi-column type="button"[width]="110">
+          <dxi-button name="edit"></dxi-button>
+          <dxi-button name="delete"></dxi-button>
+        </dxi-column>
+  
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[10, 25, 50, 100]"
+        ></dxo-pager>
+        <dxo-search-panel
+          [visible]="true"
+          [highlightCaseSensitive]="true"
+        ></dxo-search-panel>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+        <dxo-export
+          [enabled]="true"
+          [formats]="['Excel']"
+          [allowExportSelectedData]="true"
+        >
+        </dxo-export>
+  
+  
+  
+       
+        <dxi-column dataField="companyId" dataType="string"></dxi-column>
+        <dxi-column dataField="courseTypeId" dataType="string"></dxi-column>
+        <dxi-column dataField="courseTypeDescription" dataType="string"></dxi-column>
+        <dxi-column dataField="courseTypeId" dataType="string"></dxi-column>
+        <!-- <dxi-column dataField="divisionId" dataType="string"></dxi-column>
+        <dxi-column dataField="departmentId" dataType="string"></dxi-column>       
+        <dxi-column dataField="lockedBy" dataType="string"></dxi-column>
+        <dxi-column dataField="lockTs" dataType="string"></dxi-column>
+        <dxi-column dataField="branchCode" dataType="string"></dxi-column> -->
+        
+        
+  
+  
+  
+  
+  
+      </dx-data-grid>
+        <!-- Add QualificationType Modal -->
+        <div id="add_courseType" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add CourseType</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times" #closeBtn></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="CoursetypeForm" >
+                            <div class="form-group">
+                                <label> Company Id  <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="companyId" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': CoursetypeForm.get('companyId')?.invalid &&
+                            (CoursetypeForm.get('companyId')?.dirty || CoursetypeForm.get('companyId')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>courseType ID<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="courseTypeId"  type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': CoursetypeForm.get('courseTypeId')?.invalid &&
+                            (CoursetypeForm.get('courseTypeId')?.dirty || CoursetypeForm.get('courseTypeId')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label> CourseType Description <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="courseTypeDescription" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': CoursetypeForm.get('courseTypeDescription')?.invalid &&
+                            (CoursetypeForm.get('courseTypeDescription')?.dirty || CoursetypeForm.get('courseTypeDescription')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <label> CourseType Id  <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="courseTypeId" type="text"
+                                    [ngClass]="{'form-control': true, 'is-invalid': CoursetypeForm.get('courseTypeId')?.invalid &&
+                            (CoursetypeForm.get('courseTypeId')?.dirty || CoursetypeForm.get('courseTypeId')?.touched)}">
+                                <div class="invalid-feedback">
+                                    This field is required.
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="submit-section">
+                                <button class="btn btn-primary cancel-btn" data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+                                    <button class="btn btn-success btn-add-emp" (click)="Add()">Submit</button>                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Add qualification Modal -->
+
+
+        <!-- Edit qualification Modal -->
+        <div id="edit_QualificationType" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Qualification</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times" #closeupdatebtn></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form [formGroup]="CoursetypeForm">
+
+                            <div class="form-group">
+                                <label>Qualification ID<span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="qualificationType" type="text">
+
+                            </div>
+                            <div class="form-group">
+                                <label>qualificationTypeId <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="qualificationTypeId" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label>Qualification Class <span class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="qualificationClassTypeId" type="text">
+                            </div>
+                            <div class="submit-section">
+                                <button class="btn btn-primary cancel-btn" data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+
+                                <button class="btn btn-success btn-add-emp" (click)="Update()">Update</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Edit qualification Modal -->
+
+
+        <!-- Delete qualification Modal -->
+        <div class="modal custom-modal fade" id="delete_designation" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h3>Delete CourseTypeData</h3>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times" #closedeletebtn></i>
+                            </button>
+                            <p>Are you sure want to delete?</p>
+                        </div>
+                        <div class="modal-btn delete-action">
+                            <div class="row">
+                                <div class="col-6">
+
+                                    <a class="btn btn-primary continue-btn"
+                                        (click)="Delete(coursetypeData.qualificationId)">Delete</a>
+
+
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                        class="btn btn-primary cancel-btn">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Delete Location Modal -->
+
+    </div>

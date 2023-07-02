@@ -1,0 +1,73 @@
+<div class="container  top card" style="width: 30rem;">
+    <div class="left-reg">
+        <form [formGroup]="registartionForm">
+            <div class="row g-3 align-items-center left-reg">
+                <h5 class="header-reg"><u>Registration</u> </h5>
+
+                <div class="col-auto">
+                    <label for="fname" class="col-form-label">First Name</label>
+                </div>
+                <div>
+                    <input type="text" id="fname" class="form-control center-reg size-reg" formControlName="fname"
+                        [ngClass]="{'form-control': true, 'is-invalid': registartionForm.get('fname')?.invalid &&
+                (registartionForm.get('fname')?.dirty || registartionForm.get('fname')?.touched)}">
+                    <div class="invalid-feedback">
+                        This field is required.
+                    </div>
+
+                </div>
+                <div class="col-auto">
+                    <label for="lname" class="col-form-label">Last Name</label>
+                </div>
+                <div>
+                    <input type="text" id="lname" class="form-control center-reg size-reg" formControlName="lname"
+                        [ngClass]="{'form-control': true, 'is-invalid': registartionForm.get('lname')?.invalid &&
+                (registartionForm.get('lname')?.dirty || registartionForm.get('lname')?.touched)}">
+                    <div class="invalid-feedback">
+                        This field is required.
+                    </div>
+
+                </div>
+                <div class="col-auto">
+
+                    <label for="email" class="col-form-label">Email Address</label>
+                </div>
+                <div>
+                    <input type="email" class="form-control center-reg size-reg" id="email" formControlName="email"
+                        [ngClass]="{'form-control': true, 'is-invalid': registartionForm.get('email')?.invalid &&
+                (registartionForm.get('email')?.dirty || registartionForm.get('email')?.touched)}">
+                    <div class="invalid-feedback">
+                        This field is required.
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <label for="password" class="col-form-label">Password </label>
+                </div>
+                <div>
+                    <input type="password" class="form-control center-reg size-reg" id="password"
+                        formControlName="password" [ngClass]="{'form-control': true, 'is-invalid': registartionForm.get('password')?.invalid &&
+                (registartionForm.get('email')?.dirty || registartionForm.get('password')?.touched)}" minlength="6"
+                        maxlength="10">
+                    <div class="invalid-feedback">
+                        This field is required.
+                    </div>
+                </div>
+
+                <br>
+                <div class="bottom-button-reg">
+
+                    <button class="btn button-bg-reg" type="submit" (click)="register(registartionForm)"
+                        [disabled]="registartionForm.invalid">Register</button>
+                </div>
+
+                <div>
+                    <p style="margin-left:4rem ;" class="text-secondary"> Already Have Account
+
+                        <button class="btn  link-reg " routerLink="/">Login</button>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

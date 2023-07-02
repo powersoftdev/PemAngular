@@ -1,0 +1,987 @@
+<app-sidebar></app-sidebar>
+<div class="page-wrapper">
+  <div class="content container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-head-box">
+          <h3>Payroll Pay Type</h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a routerLink="/dashboard">Dashboard</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Payroll Paytype
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="card m-5 p-3 tbleBorder">
+        <div class="card-body">
+          <div class="tbleBorder">
+            <div class="row tbleBorder">
+              <div class="text">
+                <a data-bs-toggle="modal" data-bs-target="#add_payroll" class="btn" (click)="clearDropdownDataArray()">New</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 d-flex justify-content-center">
+                View PayType
+              </div>
+            </div>
+          </div>
+          <br />
+          <dx-data-grid id="gridContainer" [dataSource]="dataSource" [showBorders]="true" [columnAutoWidth]="true"
+            [showRowLines]="true" [showBorders]="true" [allowColumnResizing]="true"
+            (onContextMenuPreparing)="addMenuItems($event)" (onExporting)="onExporting($event)">
+
+            <dxi-column dataField="Action" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+              cellTemplate="dataSource"></dxi-column>
+            <div *dxTemplate="let data of 'dataSource'">
+
+              <a data-bs-toggle="modal" data-bs-target="#update_payroll"> <i class="fas fa-edit editbtn"
+                  (click)="editPayrollTypeForm(data)"></i></a>
+              &nbsp;&nbsp;&nbsp;
+              <a href="#" data-bs-toggle="modal" data-bs-target="#delete_designation"><i class="fa fa-times deleteBtn"
+                  aria-hidden="true" (click)="deleteData(data.data.payTypeId)"></i></a>
+            </div>
+
+            <dxi-column caption=" Payment Type Id" dataField="payTypeId" [visible]="ispayTypeIDVisible"></dxi-column>
+            <dxi-column caption="Payment Type Description" dataField="payTypeDescription"
+              [visible]="ispayTypeDescriptionVisible"></dxi-column>
+
+            <dxi-column caption="Attribute" dataField="attrDescription" [visible]="isattrDescriptionVisible">
+            </dxi-column>
+
+            <dxi-column caption="Operator" dataField="operatorId" [visible]="isoperatorIdVisible"></dxi-column>
+            <dxi-column caption="Conversion Percent(%)" dataField="conversionFactor"
+              [visible]="isconversionFactorVisible"></dxi-column>
+
+            <dxi-column caption="Conversion Value" dataField="employeePercent" [visible]="isemployeePercentVisible">
+            </dxi-column>
+
+            <dxi-column caption="Employer Percentage(%)" dataField="employerPercent"
+              [visible]="isemployerPercentVisible"></dxi-column>
+
+            <dxi-column caption="Pay Type GL Account" dataField="payTypeGlaccountNumber"
+              [visible]="ispayTypeGlaccountNumberVisible"></dxi-column>
+
+            <dxi-column caption="Employee  GL Account" dataField="glaccountNumber" [visible]="isglaccountNumberVisible">
+            </dxi-column>
+
+            <dxi-column caption="Employer  GL Account Expense" dataField="glaccountNumber1"
+              [visible]="isglaccountNumber1Visible"></dxi-column>
+            <dxi-column caption="Status" dataField="statusId" [visible]="isstatusIdVisible"></dxi-column>
+            <dxi-column caption="Sort Order" dataField="sortOrder" [visible]="issortOrderVisible"></dxi-column>
+            <dxi-column caption="On Payroll?" dataField="zerorise" [visible]="iszeroriseVisible"></dxi-column>
+            <dxi-column caption="Accured?" dataField="accrued" [visible]="isaccruedVisible"></dxi-column>
+            <dxi-column caption="Taxable" dataField="taxable" [visible]="istaxableVisible"></dxi-column>
+            <dxi-column caption="Prorate" dataField="prorate" [visible]="isprorateVisible"></dxi-column>
+            <dxi-column caption="Ignore Hourly Rate" dataField="ignoreHourlyRate" [visible]="isignoreHourlyRateVisible">
+            </dxi-column>
+            <dxi-column caption="Is Billing Item" dataField="billingItem" [visible]="isbillingItemVisible"></dxi-column>
+            <dxi-column caption="Show Balance On Payslip" dataField="showBalanceOnSlip"
+              [visible]="isshowBalanceOnSlipVisible"></dxi-column>
+
+              <dxo-selection mode="multiple"></dxo-selection>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+
+              <dxo-export [enabled]="true" [formats]="['xlsx','pdf','csv']" [allowExportSelectedData]="true"></dxo-export>
+
+              <dxo-group-panel [visible]="true">  </dxo-group-panel>
+
+              <dxo-search-panel    [visible]="true"   [width]="240"  placeholder="Search..." ></dxo-search-panel>
+
+              <dxo-column-chooser    [enabled]="true"   mode="select">  </dxo-column-chooser>
+
+              <dxo-grouping  [contextMenuEnabled]="true">  </dxo-grouping>
+
+        </dx-data-grid>
+
+          <dx-toolbar>
+            <dxi-item location="center" [visible]="isFooterVisible">
+              <div>
+                <div class="toolbar-label"> <b>PEM</b> <br> Payroll Paytype Copyright © 2021-2022</div>
+              </div>
+            </dxi-item>
+          </dx-toolbar>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- #region For Add Add PayRoll PayType-->
+
+    <div class="modal fade" id="add_payroll" tabindex="-1" aria-labelledby="add_payroll" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Payroll Type</h5>
+            <a type="button" class="close" data-bs-dismiss="modal" aria-label="Close" (click)="resetForm()">
+              <i class="fas fa-times deleteBtn btnback" #closeBtn></i>
+            </a>
+          </div>
+          <div class="modal-body p-3">
+            <form [formGroup]="AddPayrollForm">
+              <div>
+                <label for="payTypeId" class="col-form-label">Payment Type Id</label>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="payTypeId" formControlName="AddpayTypeId" [ngClass]="{'form-control': true, 'is-invalid': AddPayrollForm.get('AddpayTypeId')?.invalid &&
+                  (AddPayrollForm.get('AddpayTypeId')?.dirty || AddPayrollForm.get('AddpayTypeId')?.touched)}">
+                  <div class="invalid-feedback">
+                    This field is required.
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label for="payTypeDescription" class="col-form-label">Payment Type Discription</label>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="payTypeDescription"
+                    formControlName="AddpayTypeDescription"
+                    [ngClass]="{'form-control': true, 'is-invalid': AddPayrollForm.get('AddpayTypeDescription')?.invalid &&
+                    (AddPayrollForm.get('AddpayTypeDescription')?.dirty || AddPayrollForm.get('AddpayTypeDescription')?.touched)}">
+                  <div class="invalid-feedback">
+                    This field is required.
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label for="attrDescription" class="col-form-label">Attribute</label>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <select class="form-select" aria-label="Default select example" formControlName="AddattrDescription"
+                    [ngClass]="{'form-control': true, 'is-invalid': AddPayrollForm.get('AddattrDescription')?.invalid &&
+                  (AddPayrollForm.get('AddattrDescription')?.dirty || AddPayrollForm.get('AddattrDescription')?.touched)}">
+                    <div class="invalid-feedback">
+                      This field is required.
+                    </div>
+                    <option>--Select Attribute--</option>
+                    <option value="{{ data.attrId }}" *ngFor="let data of payrollAttributeData">
+                      {{ data.attrDescription }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <div>
+                    <label for="operatorId" class="col-form-label">Operator</label>
+                  </div>
+                  <div>
+                    <select class="form-select" aria-label="Default select example" formControlName="AddoperatorId"
+                      [ngClass]="{'form-control': true, 'is-invalid': AddPayrollForm.get('AddoperatorId')?.invalid &&
+                    (AddPayrollForm.get('AddoperatorId')?.dirty || AddPayrollForm.get('AddoperatorId')?.touched)}">
+                      <div class="invalid-feedback">
+                        This field is required.
+                      </div>>
+                      <option>--Select Operator--</option>
+                      <option value="{{ operaData.operatorId }}" *ngFor="let operaData of payrollOperatorData">
+                        {{ operaData.operatorId }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div>
+                    <label for="conversionFactor" class="col-form-label">Conversion Percent(%)</label>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" id="conversionFactor" formControlName="AddconversionFactor"
+                      [ngClass]="{'form-control': true, 'is-invalid': AddPayrollForm.get('AddconversionFactor')?.invalid &&
+                    (AddPayrollForm.get('AddconversionFactor')?.dirty || AddPayrollForm.get('AddconversionFactor')?.touched)}">
+                    <div class="invalid-feedback">
+                      This field is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <div>
+                    <label for="EmployerPercent" class="col-form-label">Employer Percent(%)</label>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" id="EmployerPercent" formControlName="AddemployerPercent">
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div>
+                    <label for="ConversionValue" class="col-form-label">Conversion Value</label>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" id="ConversionValue" formControlName="AddemployeePercent">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div>
+                  <label for="EmployerGLAccount" class="col-form-label">Employer GL Account</label>
+                </div>
+                <div class="col-sm-12">
+                  <select class="form-select" aria-label="Default select example" formControlName="AddglaccountNumber">
+                    <option>---Select ---</option>
+                    <option value="{{ glData.glaccountNumber }}" *ngFor="let glData of payrollLedgerData">
+                      {{glData.glaccountName}},{{ glData.glaccountNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div>
+                  <label for="PayTypeGLAcccount" class="col-form-label">PayType GL Acccount</label>
+                </div>
+                <div class="col-sm-12">
+                  <select class="form-select" aria-label="Default select example"
+                    formControlName="AddpayTypeGlaccountNumber">
+                    <option value="{{ glData.glaccountNumber }}" *ngFor="let glData of payrollLedgerData">
+                      {{glData.glaccountName}},{{ glData.glaccountNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div>
+                  <label for="EmployerGLAccountExpense" class="col-form-label">Employer GL Account-Expense</label>
+                </div>
+                <div class="col-sm-12">
+                  <select class="form-select" aria-label="Default select example" formControlName="AddglaccountNumber1">
+                    <option>---Select---</option>
+                    <option value="{{ glData.glaccountNumber }}" *ngFor="let glData of payrollLedgerData">
+                      {{glData.glaccountName}},{{ glData.glaccountNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-4">
+                  <label for="status" class="col-form-label">Status</label>
+                  <div>
+                    <select class="form-select" aria-label="Default select example" formControlName="AddstatusId">
+                      <option>---Select---</option>
+                      <option value="{{ statusData.statusId }}" *ngFor="let statusData of payrollStatus">
+                        {{ statusData.statusId }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <label for="SortOrder" class="col-form-label">Sort Order</label>
+                  <div>
+                    <input type="text" class="form-control" id="SortOrder" formControlName="AddsortOrder">
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <label class="col-form-label" for="zerorise">On Payroll?</label>
+                  <div>
+                    <input type="checkbox" class="form-check-input " id="zerorise" formControlName="Addzerorise" />
+                  </div>
+                </div>
+              </div>
+              <div class=" checkBoxSecion">
+                <div>
+                  <div>
+                    <label class="col-form-label" for="accrued">
+                      Accrued?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="accrued" formControlName="Addaccrued" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="IsTaxable">Is Taxable?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="IsTaxable" formControlName="Addtaxable" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="prorate">Prorate?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="prorate" formControlName="Addprorate" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="IgnoreHourlyRate">Ignore Hourly Rate?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="IgnoreHourlyRate"
+                      formControlName="AddignoreHourlyRate" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="isbillingItem">Is Billing Item?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="isbillingItem"
+                      formControlName="AddbillingItem" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="ShowBalanceOnPayslip">Show Balance On Payslip?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="ShowBalanceOnPayslip"
+                      formControlName="AddshowBalanceOnSlip" />
+                  </div>
+                </div>
+              </div>
+              <!-- New Line -->
+              <div class="d-flex bd-highlight border border-dark">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  Pay Type Elements
+                </div>
+                <div class="p-2 bd-highlight border border-dark" (click)="ShowHide()">
+                <span class="btn" disable="" >Show/Hide Search</span>
+                </div>
+                <div class="p-2 bd-highlight border border-dark" (click)="showNewLine()" >
+                   <span class="btn" >New Line</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <p *ngIf="isShow">
+                  Search Expression: <br>
+                  <select>
+                    <option>Payment Type Basis</option>
+                    <option>Operator</option>
+                  </select> &nbsp;
+                  <select>
+                    <option>Like</option>
+                    <option>=</option>
+                    <option>></option>
+                    <option>
+                       </option>
+                  </select> &nbsp;
+                  <input type="search" /> &nbsp;
+                  <input type="button" class="btnSearch" value="Search" /> &nbsp;
+                  <input type="button" class=" btnClear" value="Clear" />
+                </p>
+              </div>
+
+
+
+              <table class="container" *ngIf="showNewLineContainer ">
+                <thead>
+
+                  <tr>
+                    <td class="text-center"> <b>Action</b> </td>
+                    <td class="text-center"><label>Payment Type Basis</label></td>
+                    <td class="text-center"><label>Operator</label></td>
+                  </tr>
+
+                </thead>
+
+
+                <tbody>
+                  <tr *ngFor="let dynamic of dynamicArrayData; let i = index;" #draggable>
+
+                    <!-- ***********************Save & Column************************* -->
+                    <td>
+                      <!-- <button class="fa fa-plus " (click)="deleteRow(i)">Delete</button> -->
+                 <div class="row">
+                        <div class="col-sm-6" (click)="save()">
+                          <span class="btn"> <i class="fas fa-save"></i></span>
+                          &nbsp;
+                        </div>
+                        <div (click)="deleteNewLineRow(i)" class="col-sm-6">
+                          <span class="btn"> <i class="fas fa-undo"></i></span>
+                        </div>
+                      </div>
+                    </td>
+
+
+                    <!-- PaymentType Basis Column -->
+                    <td>
+                      <!-- <input style="width:120px"  name="{{dynamic.firstName}}" [(ngModel)]="dynamic.firstName"  type="text" /> -->
+                      <div class="border border-dark d-flex ">
+                        <div class="inline">
+                          <input type="text" formControlName="AddNewLineInput{{i+1}}" />
+                        </div>
+                        <div class="m-1 inline">
+                          <div class="btn-group dropup d-flex">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><b>...</b></a>
+                            <div class="dropdown-menu">
+                              <div class="container p-4">
+                                <div class="d-flex flex-row bd-highlight size">
+                                  <div class="bd-highlight">PayType List</div>
+                                </div>
+                                <div class="d-flex flex-row bd-highlight">
+                                </div>
+                                <div class="d-flex flex-row bd-highlight">
+                                  <div class="bd-highlight">Search Expression</div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-2">
+                                    <select class="form-select" aria-label="Default select example">
+                                      <option>PayTypeId</option>
+                                      <option>PayTypeDescription</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-2">
+                                    <select class="form-select" aria-label="Default select example">
+                                      <option>Like</option>
+                                      <option>=</option>
+                                      <option>></option>
+                                      <option>
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div class="col-sm-8">
+                                    <input type="search" placeholder="search here" />
+                                    <button class="btn btn-primary">Search</button>
+                                  </div>
+                                </div>
+                                <dx-data-grid id="gridContainer" [dataSource]="dataSource" [showBorders]="true"
+                                  [columnAutoWidth]="true" [showRowLines]="true" [showBorders]="true"
+                                  [allowColumnResizing]="true" (onContextMenuPreparing)="addMenuItems($event)">
+                                  <dxi-column dataField="Action" [width]="100" [allowFiltering]="false"
+                                    [allowSorting]="false" cellTemplate="dataSource">
+                                  </dxi-column>
+                                  <div *dxTemplate="let data of 'dataSource'">
+                                    <a (click)="onSelectClick(data,i+1)"> Select</a>
+                                  </div>
+                                  <dxi-column caption=" Payment Type Id" dataField="payTypeId"></dxi-column>
+                                  <dxi-column caption="Payment Type Description" dataField="payTypeDescription">
+                                  </dxi-column>
+                                  <!-- <dxo-selection mode="multiple"></dxo-selection> -->
+                                  <dxo-paging [pageSize]="10"></dxo-paging>
+                                </dx-data-grid>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+
+                    <!-- ***************************Operator************************** -->
+                    <td>
+                      <!-- <input style="width:120px" name="{{dynamic.firstName}}" [(ngModel)]="dynamic.firstName"  type="text" /> -->
+                      <div>
+                        <select class="form-select" aria-label="Default select example"
+                          formControlName="NewLineoperatorId">
+                          <option>--Select Operator--</option>
+                          <option value="{{ operaData.operatorId }}" *ngFor="let operaData of payrollOperatorData">
+                            {{ operaData.operatorId }}
+                          </option>
+                        </select>
+                      </div>
+                    </td>
+
+                  </tr>
+
+
+                </tbody>
+              </table>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btnBorder" (click)="addPayroll(AddPayrollForm)"> Ok </button>
+            <button type="button" class="btn btn-danger btnBorder" data-bs-dismiss="modal" (click)="resetForm()"> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add payroll PayType -->
+    <!-- #endregion For Add Add PayRoll PayType-->
+
+
+    <!--#region For Update payroll PayType -->
+    <div class="modal fade" id="update_payroll" tabindex="-1" aria-labelledby="add_payroll" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update Payroll Type</h5>
+            <a type="button" class="close" data-bs-dismiss="modal" aria-label="Close" (click)="upreset()">
+              <i class="fas fa-times deleteBtn btnback" #closeupdatebtn></i>
+            </a>
+          </div>
+          <div class="modal-body p-3">
+            <form [formGroup]="PayrollForm">
+              <div>
+                <label for="payTypeId" class="col-form-label">Payment Type Id</label>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <input [readonly]="isReadonly" type="text" class="form-control" id="payTypeId" formControlName="payTypeId" />
+                </div>
+              </div>
+              <div>
+                <label for="payTypeDescription" class="col-form-label">Payment Type Discription</label>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" id="payTypeDescription" formControlName="payTypeDescription"
+                    [ngClass]="{'form-control': true, 'is-invalid': PayrollForm.get('payTypeDescription')?.invalid &&
+                    (PayrollForm.get('payTypeDescription')?.dirty || PayrollForm.get('payTypeDescription')?.touched)}">
+                  <div class="invalid-feedback">
+                    This field is required.
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label for="attrDescription" class="col-form-label">Attribute</label>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <select class="form-select" aria-label="Default select example" formControlName="attrDescription">
+                    <option>--Select Attribute--</option>
+                    <option value="{{ data.attrId }}" *ngFor="let data of payrollAttributeData">
+                      {{ data.attrDescription }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <div>
+                    <label for="operatorId" class="col-form-label">Operator</label>
+                  </div>
+                  <div>
+                    <select class="form-select" aria-label="Default select example" formControlName="operatorId">
+                      <option>--Select Operator--</option>
+                      <option value="{{ operaData.operatorId }}" *ngFor="let operaData of payrollOperatorData">
+                        {{ operaData.operatorId }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div>
+                    <label for="conversionFactor" class="col-form-label">Conversion Percent(%)</label>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" id="conversionFactor" formControlName="conversionFactor"
+                      [ngClass]="{'form-control': true, 'is-invalid': PayrollForm.get('conversionFactor')?.invalid &&
+                    (PayrollForm.get('conversionFactor')?.dirty || PayrollForm.get('conversionFactor')?.touched)}">
+                    <div class="invalid-feedback">
+                      This field is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-6">
+                  <div>
+                    <label for="EmployerPercent" class="col-form-label">Employer Percent(%)</label>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" id="EmployerPercent" formControlName="employerPercent">
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div>
+                    <label for="ConversionValue" class="col-form-label">Conversion Value</label>
+                  </div>
+                  <div>
+                    <input type="text" class="form-control" id="ConversionValue" formControlName="employeePercent">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div>
+                  <label for="EmployerGLAccount" class="col-form-label">Employer GL Account</label>
+                </div>
+                <div class="col-sm-12">
+                  <select class="form-select" aria-label="Default select example" formControlName="glaccountNumber">
+                    <option>---Select ---</option>
+                    <option value="{{ glData.glaccountNumber }}" *ngFor="let glData of payrollLedgerData">
+                      {{glData.glaccountName}},{{ glData.glaccountNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div>
+                  <label for="PayTypeGLAcccount" class="col-form-label">PayType GL Acccount</label>
+                </div>
+                <div class="col-sm-12">
+                  <select class="form-select" aria-label="Default select example"
+                    formControlName="payTypeGlaccountNumber">
+                    <option value="{{ glData.glaccountNumber }}" *ngFor="let glData of payrollLedgerData">
+                      {{glData.glaccountName}},{{ glData.glaccountNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div>
+                  <label for="EmployerGLAccountExpense" class="col-form-label">Employer GL Account-Expense</label>
+                </div>
+                <div class="col-sm-12">
+                  <select class="form-select" aria-label="Default select example" formControlName="glaccountNumber1">
+                    <option>---Select---</option>
+                    <option value="{{ glData.glaccountNumber }}" *ngFor="let glData of payrollLedgerData">
+                      {{glData.glaccountName}},{{ glData.glaccountNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-4">
+                  <label for="status" class="col-form-label">Status</label>
+                  <div>
+                    <select class="form-select" aria-label="Default select example" formControlName="statusId">
+                      <option>---Select---</option>
+                      <option value="{{ statusData.statusId }}" *ngFor="let statusData of payrollStatus">
+                        {{ statusData.statusId }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <label for="SortOrder" class="col-form-label">Sort Order</label>
+                  <div>
+                    <input type="text" class="form-control" id="SortOrder" formControlName="sortOrder">
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <label class="col-form-label" for="zerorise">On Payroll?</label>
+                  <div>
+                    <input type="checkbox" class="form-check-input " id="zerorise" formControlName="zerorise" />
+                  </div>
+                </div>
+              </div>
+              <div class=" checkBoxSecion">
+                <div>
+                  <div>
+                    <label class="col-form-label" for="accrued">
+                      Accrued?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="accrued" formControlName="accrued" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="IsTaxable">Is Taxable?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="IsTaxable" formControlName="taxable" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="prorate">Prorate?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="prorate" formControlName="prorate" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="IgnoreHourlyRate">Ignore Hourly Rate?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="IgnoreHourlyRate"
+                      formControlName="ignoreHourlyRate" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="isbillingItem">Is Billing Item?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="isbillingItem" formControlName="billingItem" />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label class="col-form-label" for="ShowBalanceOnPayslip">Show Balance On Payslip?</label>
+                  </div>
+                  <div class="form-group row m-2">
+                    <input type="checkbox" class="form-check-input" id="ShowBalanceOnPayslip"
+                      formControlName="showBalanceOnSlip" />
+                  </div>
+                </div>
+              </div>
+              <!-- New Line -->
+              <div class="d-flex bd-highlight border border-dark">
+                <div class="p-2 flex-grow-1 bd-highlight">
+                  Pay Type Elements
+                </div>
+                <div class="p-2 bd-highlight border border-dark" (click)="ShowHide()">
+           <span class="btn">Show/Hide Search</span>
+                </div>
+                <div class="p-2 bd-highlight border border-dark" (click)="showNewLine()">
+                <span class="btn"> New Line</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <p *ngIf="isShow">
+                  Search Expression: <br>
+                  <select>
+                    <option>Payment Type Basis</option>
+                    <option>Operator</option>
+                  </select> &nbsp;
+                  <select>
+                    <option>Like</option>
+                    <option>=</option>
+                    <option>></option>
+                    <option>
+                      < </option>
+                  </select> &nbsp;
+                  <input type="search" /> &nbsp;
+                  <input type="button" class="btnSearch" value="Search" /> &nbsp;
+                  <input type="button" class="btnClear" value="Clear" />
+                </p>
+              </div>
+              <div class="container">
+                <!-- <div class="form-group row border border-dark">
+                  <div class="col-sm-2 border border-dark">---</div>
+                  <div class="col-sm-8 d-flex justify-content-center border border-dark">
+                    Payment Type Basis
+                  </div>
+                  <div class="col-sm-2 justify-content-center border border-dark">Operator</div>
+                </div> -->
+                <!-- <div class="form-group row border border-dark">
+                  <div class="col-sm-2 border border-dark"><i class="fas fa-save"></i>&nbsp; &nbsp;&nbsp;
+           <i class="fas fa-undo"></i>
+                  </div> -->
+                <!-- <div class="col-sm-8 border border-dark d-flex">
+                    <div class="inline">
+                      <input type="text" formControlName="EditNewLineInput" />
+                    </div>
+                    <div class="m-1 inline">
+                      <div class="btn-group dropup d-flex">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><b>...</b></a>
+                        <div class="dropdown-menu">
+                          <div class="container p-2">
+                            <div class="d-flex flex-row bd-highlight">
+                              <div class="bd-highlight">PayType List</div>
+                            </div>
+                            <div class="d-flex flex-row bd-highlight">
+                              <div class="bd-highlight">Search Expression</div>
+                            </div>
+                            <div class="row">
+                              <div class="col-2">
+                                <select class="form-select" aria-label="Default select example">
+                                  <option>PayTypeId</option>
+                                  <option>PayType Description</option>
+                                </select>
+                              </div>
+                              <div class="col-2">
+                                <select class="form-select" aria-label="Default select example">
+                                  <option>Like</option>
+                                  <option>=</option>
+                                  <option>></option>
+                                  <option>
+                                    < </option>
+                                </select>
+                              </div>
+                              <div class="col-8">
+                                <input type="text" placeholder="search here" />
+                                <button class="btn btn-primary">search</button>
+                              </div>
+                            </div>
+                            <dx-data-grid id="gridContainer" [dataSource]="dataSource" [showBorders]="true"
+                              [columnAutoWidth]="true" [showRowLines]="true" [showBorders]="true"
+                              [allowColumnResizing]="true" (onContextMenuPreparing)="addMenuItems($event)">
+                              <dxi-column dataField="Action" [width]="100" [allowFiltering]="false"
+                                [allowSorting]="false" cellTemplate="dataSource">
+                              </dxi-column>
+                              <div *dxTemplate="let data of 'dataSource'">
+                                <a (click)="onSelectClick(data)"> Select</a>
+                              </div>
+                              <dxi-column caption=" Payment Type Id" dataField="payTypeId"></dxi-column>
+                              <dxi-column caption="Payment Type Description" dataField="payTypeDescription">
+                              </dxi-column>
+                              <dxo-selection mode="multiple"></dxo-selection>
+                              <dxo-paging [pageSize]="10"></dxo-paging>
+                            </dx-data-grid>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+                <table class="container" *ngIf="showNewLineContainer">
+                  <thead>
+
+                    <tr>
+                      <td class="text-center"> <b>Action</b> </td>
+                      <td class="text-center"><label>Payment Type Basis</label></td>
+                      <td class="text-center"><label>Operator</label></td>
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+                    <tr *ngFor="let dynamic of dynamicArrayData; let i = index;">
+
+                      <!-- ***********************Save & Column************************* -->
+                      <td>
+
+                        <div class="row">
+                          <div class="col-sm-6" >
+                             <!-- <span class="btn" (click)="save"> <i class="fas fa-save"></i></span>  -->
+                              &nbsp;<span class="btn"  (click)="saveEdit(i+1)"> <i class="fas fa-edit"></i></span>
+                            </div>
+
+                          <div class="col-sm-6">
+                       <span  (click)="deleteRow(i+1)"><i class="fas fa-undo"></i></span>
+                      </div>
+                        </div>
+                      </td>
+
+
+                      <!-- PaymentType Basis Column -->
+                      <td>
+                        <!-- <input style="width:120px"  name="{{dynamic.firstName}}" [(ngModel)]="dynamic.firstName"  type="text" /> -->
+                        <div class="border border-dark d-flex btn">
+                          <div class="inline">
+
+
+                            <input type="text" formControlName="EditNewLineInput{{i+1}}"/>
+
+                          </div>
+                          <div class="m-1 inline">
+                            <div class="btn-group dropup d-flex">
+                              <a class="dropdown-toggle" data-bs-toggle="dropdown"><b>...</b></a>
+                              <div class="dropdown-menu ">
+                                <div class="container p-4">
+                                  <div class="d-flex flex-row bd-highlight size">
+                                    <div class="bd-highlight">PayType List</div>
+                                  </div>
+                                  <div class="d-flex flex-row bd-highlight">
+                                  </div>
+                                  <div class="d-flex flex-row bd-highlight">
+                                    <div class="bd-highlight">Search Expression</div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-2">
+                                      <select class="form-select" aria-label="Default select example">
+                                        <option>PayTypeId</option>
+                                        <option>PayTypeDescription</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-2">
+                                      <select class="form-select" aria-label="Default select example">
+                                        <option>Like</option>
+                                        <option>=</option>
+                                        <option>></option>
+                                        <option>
+                                        </option>
+                                      </select>
+                                    </div>
+                                    <div class="col-8">
+                                      <input type="text" placeholder="search here" />
+                                      <button class="btn btn-primary">Search</button>
+                                    </div>
+                                  </div>
+                                  <dx-data-grid id="gridContainer" [dataSource]="dataSource" [showBorders]="true"
+                                    [columnAutoWidth]="true" [showRowLines]="true" [showBorders]="true"
+                                    [allowColumnResizing]="true" (onContextMenuPreparing)="addMenuItems($event)">
+                                    <dxi-column dataField="Action" [width]="100" [allowFiltering]="false"
+                                      [allowSorting]="false" cellTemplate="dataSource">
+                                    </dxi-column>
+                                    <div *dxTemplate="let data of 'dataSource'">
+                                      <a (click)="onEditSelectClick(data,i+1)"> Select</a>
+                                    </div>
+                                    <dxi-column caption=" Payment Type Id" dataField="payTypeId"></dxi-column>
+                                    <dxi-column caption="Payment Type Description" dataField="payTypeDescription">
+                                    </dxi-column>
+                                    <!-- <dxo-selection mode="multiple"></dxo-selection> -->
+                                    <dxo-paging [pageSize]="10"></dxo-paging>
+                                  </dx-data-grid>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+
+                      <!-- ***************************Operator************************** -->
+                      <td>
+                        <!-- <input style="width:120px" name="{{dynamic.firstName}}" [(ngModel)]="dynamic.firstName"  type="text" /> -->
+                        <div>
+                          <select class="form-select" aria-label="Default select example" formControlName="EditLineoperatorId{{i+1}}">
+                            <option>--Select Operator--</option>
+                            <option value="{{ operaData.operatorId }}" *ngFor="let operaData of payrollOperatorData">
+                              {{ operaData.operatorId }}
+                            </option>
+                          </select>
+                        </div>
+                      </td>
+
+                    </tr>
+
+
+                  </tbody>
+                </table>
+
+                <!-- <div class="col-sm-2 border border-dark">
+                    <select class="form-select" aria-label="Default select example" formControlName="EditLineoperatorId{{i+1}}">
+                      <option>--Select Operator--</option>
+                      <option value="{{ operaData.operatorId }}" *ngFor="let operaData of payrollOperatorData">
+                        {{ operaData.operatorId }}
+                      </option>
+                    </select>
+                  </div> -->
+              </div>
+              <!-- </div> -->
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btnBorder" (click)="Update()"> Ok </button>
+            <button type="button" class="btn btn-danger btnBorder" data-bs-dismiss="modal" (click)="upreset()"> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--#endregion Update payroll PayType -->
+  </div>
+  <!-- Delete payroll Modal -->
+  <div class="modal custom-modal fade" id="delete_designation" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="form-header">
+            <h3>Delete Payroll</h3>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times" #closedeletebtn></i>
+            </button>
+            <p>Are you sure want to delete?</p>
+          </div>
+          <div class="modal-btn delete-action">
+            <div class="row">
+              <div class="col-6">
+                <a class="btn btn-primary continue-btn" (click)="confirmDelete(true)">Delete</a>
+              </div>
+              <div class="col-6">
+                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Delete payroll Modal -->
+</div>
+
+
+
+
+

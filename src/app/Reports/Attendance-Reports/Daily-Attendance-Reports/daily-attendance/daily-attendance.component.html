@@ -1,0 +1,91 @@
+<app-sidebar></app-sidebar>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-head-box">
+                    <h3>Daily Attendance Report</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a routerLink="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Daily Attendance Report
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="container border-dark">
+                <div>
+                    <form [formGroup]="getDateForm" (ngSubmit)="getAttendance()">
+                        <div>
+                            <label class="l-Center" for="pform"> Form</label> <div>
+                                <input type="date" id="pform"  min="1900-01-01" max="2030-12-31"  formControlName="startDate" [ngClass]="{ 'is-invalid': getDateForm.get('startDate')?.invalid &&
+                            (getDateForm.get('startDate')?.dirty || getDateForm.get('startDate')?.touched)}">
+                            <div class="invalid-feedback">
+                            <b>This field is required.</b>    
+                            </div>
+                            </div>
+                            
+                        </div>
+
+                        <div> 
+                            <label for="periodTo"> To</label>  
+                            <div>
+                                <input type="date" useValueAsDate id="periodTo" min="1900-01-01" max="2030-12-31"  formControlName="endDate" [ngClass]="{'is-invalid': getDateForm.get('endDate')?.invalid &&
+                                            (getDateForm.get('endDate')?.dirty || getDateForm.get('endDate')?.touched)}">
+                                <div class="invalid-feedback">
+                                  <b>This field is required.</b>  
+                                </div>
+                            </div>
+                        </div>
+    <br>
+
+                        <button type="submit" class="btn btn-primary" [disabled]="!getDateForm.valid" >Get Daily Attendance</button>
+                    </form>
+                </div> <br>
+            <div class="long-title">
+
+
+
+                <dx-data-grid id="gridContainer" [dataSource]="attendanceData" [allowColumnReordering]="true"
+                    [showBorders]="true" (onExporting)="onExporting($event)">
+
+                    <!-- <dxi-column [width]="200" caption="Sr. No" dataField="" cellTemplate=""></dxi-column> -->
+                    <dxi-column caption="AttendanceDate" dataField="attendanceDate"></dxi-column>
+                    <dxi-column caption="EmployeeId" dataField="employeeId"></dxi-column>
+                    <dxi-column caption="FirstName" dataField="employeeFirstName"></dxi-column>
+                    <dxi-column caption="LastName" dataField=""></dxi-column>
+                    <dxi-column caption="TimeIn" dataField="expectedTimeIn"></dxi-column>
+                    <dxi-column caption="TimeOut" dataField="expectedTimeOut"></dxi-column>
+                    <dxi-column caption="AttendanceStatus" dataField=""></dxi-column>
+                    <dxi-column caption="ClockedIn" dataField=""></dxi-column>
+                    <dxi-column caption="ClockedOut" dataField=""></dxi-column>
+                    <dxi-column caption="TimeInAddress" dataField=""></dxi-column>
+                    <dxi-column caption="TimeOutAddress2" dataField=""></dxi-column>
+
+                    <dxo-selection mode="multiple"></dxo-selection>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+
+                    <dxo-export [enabled]="true" [formats]="['xlsx','pdf','csv']" [allowExportSelectedData]="true">
+                    </dxo-export>
+
+                    <dxo-group-panel [visible]="true"> </dxo-group-panel>
+
+                    <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+
+                    <dxo-column-chooser [enabled]="true" mode="select"> </dxo-column-chooser>
+
+                    <dxo-grouping [contextMenuEnabled]="true"> </dxo-grouping>
+
+
+
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>

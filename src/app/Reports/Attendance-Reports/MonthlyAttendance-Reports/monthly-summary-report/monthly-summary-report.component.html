@@ -1,0 +1,91 @@
+<app-sidebar></app-sidebar>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-head-box">
+                    <h3>Monthly Attendance Report</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a routerLink="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                Monthly Attendance Report
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="container border-dark">
+            <div class="long-title">
+                <form [formGroup]="MonthForm" (ngSubmit)="getMonthlyAttendance()">
+                    <div>
+                        <label > Form</label>
+                        <div>
+                            <input type="month"      min="1900-01" max="2030-12" formControlName="startMonth" [ngClass]="{'is-invalid': MonthForm.get('startMonth')?.invalid &&
+                            (MonthForm.get('startMonth')?.dirty || MonthForm.get('startMonth')?.touched)}">
+                            <div class="invalid-feedback">
+                                <b> This field is required.</b>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <label for=""> To</label>
+                        <div>
+                            <input type="month" useValueAsDate formControlName="endMonth" min="1900-01" max="2030-12" [ngClass]="{'is-invalid': MonthForm.get('endMonth')?.invalid &&
+                            (MonthForm.get('endMonth')?.dirty || MonthForm.get('endMonth')?.touched)}">
+                            <div class="invalid-feedback">
+                                <b> This field is required.</b>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary" [disabled]="!MonthForm.valid">Get Monthly
+                        Attendance</button>
+                </form>
+                <br>
+                <dx-data-grid id="gridContainer" [dataSource]="MonthlyData" [allowColumnReordering]="true"
+                    [showBorders]="true" (onExporting)="onExporting($event)">
+
+                    <!-- <dxi-column [width]="200" caption="Sr. No" dataField="" cellTemplate=""></dxi-column> -->
+                    <dxi-column caption="Company Id" dataField="companyId"></dxi-column>
+                    <dxi-column caption="Division Id" dataField="divisionId"></dxi-column>
+                    <dxi-column caption="Department Id" dataField="departmentId"></dxi-column>
+                    <dxi-column caption="Attendance Date" dataField="attendanceDate"></dxi-column>
+                    <dxi-column caption=" First Name" dataField="employeeFirstName"></dxi-column>
+                    <dxi-column caption="Employee Name" dataField="employeeName"></dxi-column>
+                    <dxi-column caption="Employee Id" dataField="employeeId"></dxi-column>
+                    <dxi-column caption="Expected No of WorkHrs" dataField="expectedNoofWorkHrs"></dxi-column>
+                    <dxi-column caption="Expected No of Days" dataField="expectedNoofDays"></dxi-column>
+                    <dxi-column caption="Worked Hours" dataField="workedHours"></dxi-column>
+                    <dxi-column caption="Absent Hours" dataField="absentHours"></dxi-column>
+                    <dxi-column caption="Paid Hours" dataField="paidhours"></dxi-column>
+                    <dxi-column caption="Worked Days" dataField="workedDays"></dxi-column>
+                    <dxi-column caption="Locked By" dataField="lockedBy"></dxi-column>
+                    <dxi-column caption="Lock Ts" dataField=" lockTs"></dxi-column>
+
+                    <dxo-selection mode="multiple"></dxo-selection>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+
+                    <dxo-export [enabled]="true" [formats]="['xlsx','pdf','csv']" [allowExportSelectedData]="true">
+                    </dxo-export>
+
+                    <dxo-group-panel [visible]="true"> </dxo-group-panel>
+
+                    <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+
+                    <dxo-column-chooser [enabled]="true" mode="select"> </dxo-column-chooser>
+
+                    <dxo-grouping [contextMenuEnabled]="true"> </dxo-grouping>
+
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>

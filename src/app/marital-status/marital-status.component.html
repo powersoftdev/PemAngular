@@ -1,0 +1,434 @@
+<app-sidebar></app-sidebar>
+
+
+<div class="page-wrapper">
+
+  <!-- Page Content -->
+  <div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-head-box">
+          <h3>Marital Status</h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Marital Status</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <!-- /Page Header -->
+
+    <!-- Search Filter -->
+    <div class="row filter-row">
+      <div class="col-md-8"></div>
+      <div class="col-md-4">
+        <div class="add-emp-section">
+          <a id="add-mar-btn" class="btn btn-success btn-add-emp" data-bs-toggle="modal" data-bs-target="#add_marital-status"
+             style="width: auto;"><i class="fas fa-plus"></i> Add
+            Marital Status</a>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <dx-data-grid
+      id="gridContainer"
+      [dataSource]="maritalData"
+      [remoteOperations]="false"
+      [allowColumnReordering]="true"
+      [rowAlternationEnabled]="true"
+      [showBorders]="true"
+      (onContentReady)="contentReady($event)"
+      (onExporting)="onExporting($event)"
+
+    >
+   
+    <dxo-editing  mode="row"
+        [allowAdding] = "true"
+        [allowDeleting]="true"
+        [useIcons]="true"
+        [allowUpdating] = "true"></dxo-editing>
+
+        <dxo-filter-row [visible] = "true"></dxo-filter-row>
+        <dxi-column [allowFiltering] = "false"></dxi-column>
+
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-scrolling mode="virtual"></dxo-scrolling>
+      <dxi-column dataField="Action" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                  cellTemplate="maritalData"></dxi-column>
+      <div *dxTemplate="let data of 'maritalData'">
+
+        <a data-bs-toggle="modal" data-bs-target="#edit_marital-status">
+          <i class="fas fa-edit editbtn"
+             (click)="editMarital(data)"></i></a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="#" data-bs-toggle="modal" data-bs-target="#delete_marital-status">
+          <i class="fa fa-times deleteBtn"
+             aria-hidden="true" (click)="deleteData(data.data.statusId)"></i></a>
+      </div>
+      <dxi-column type="button"[width]="110">
+        <dxi-button name="edit"></dxi-button>
+        <dxi-button name="delete"></dxi-button>
+      </dxi-column>
+
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-pager
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[10, 25, 50, 100]"
+      ></dxo-pager>
+      <dxo-search-panel
+        [visible]="true"
+        [highlightCaseSensitive]="true"
+      ></dxo-search-panel>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+      <dxo-export
+        [enabled]="true"
+        [formats]="['Excel']"
+        [allowExportSelectedData]="true">
+      </dxo-export>
+      <dxi-column dataField="statusId" dataType="string">Status Id</dxi-column>
+      <dxi-column dataField="statusDescription" dataType="string">Status Description</dxi-column>
+    </dx-data-grid>
+
+    <!-- Add STATE Modal -->
+    <div id="add_marital-status" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Marital Status</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times" #closeBtn></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="MaritalForm">
+              <div class="form-group">
+                <label>Status Id <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="statusId" type="text"
+                       [ngClass]="{'form-control': true, 'is-invalid': MaritalForm.get('statusId')?.invalid &&
+                            (MaritalForm.get('statusId')?.dirty || MaritalForm.get('statusId')?.touched)}">
+                <div class="invalid-feedback">
+                  This field is required.
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Status Description <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="statusDescription" type="text"
+                       [ngClass]="{'form-control': true, 'is-invalid': MaritalForm.get('statusDescription')?.invalid &&
+                            (MaritalForm.get('statusDescription')?.dirty || MaritalForm.get('statusDescription')?.touched)}">
+                <div class="invalid-feedback">
+                  This field is required.
+                </div>
+              </div>
+              <div class="submit-section">
+                <button class="btn btn-danger cancel-btn" data-bs-dismiss="modal"
+                        aria-label="Close">Cancel</button>
+                <button class="btn btn-success submit-btn" (click)="Add()">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Add Title Modal -->
+
+    <!-- Edit Title Modal -->
+    <div id="edit_marital-status" class="modal custom-modal fade" role="dialog" tabindex="-1" aria-labelledby="add_title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Marital Status</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times" #closeupdatebtn></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="MaritalForm">
+
+              <div class="form-group-row">
+                <label for="statusId" class="col-form-label">Status Id <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="statusId"  id="statusId" type="text"
+                       [ngClass]="{'form-control': true, 'is-invalid': MaritalForm.get('statusId')?.invalid &&
+                            (MaritalForm.get('statusId')?.dirty || MaritalForm.get('statusId')?.touched)}">
+              </div>
+              <div class="form-group">
+                <label>Status Description <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="statusDescription" type="text">
+              </div>
+              <div class="submit-section">
+                <button class="btn cancel-btn btn-danger" data-bs-dismiss="modal"
+                        aria-label="Close">Cancel</button>
+
+                <button class="btn btn-primary submit-btn btn-success" (click)="Update()">Update</button>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Edit Title Modal -->
+
+
+    <!-- Delete Title Modal -->
+    <div class="modal custom-modal fade" id="delete_marital-status" role="dialog">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-body">
+            <div class="form-header">
+              <h3>Delete Marital Status</h3>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times" #closedeletebtn></i>
+              </button>
+              <p>Are you sure you want to delete?</p>
+            </div>
+            <div class="modal-btn delete-action">
+              <div class="row">
+                <div class="col-6">
+
+                  <a class="btn continue-btn btn-danger"
+                     (click)="Delete(maritalData.statusId)">Delete</a>
+
+                </div>
+                <div class="col-6">
+                  <a href="javascript:void(0);" data-bs-dismiss="modal"
+                     class="btn btn-primary cancel-btn">Cancel</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Delete Title Modal -->
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<app-sidebar></app-sidebar>-->
+
+<!--<div class="page-wrapper">-->
+
+<!--  &lt;!&ndash; Page Content &ndash;&gt;-->
+<!--  <div class="content container-fluid">-->
+
+<!--    &lt;!&ndash; Page Header &ndash;&gt;-->
+<!--    <div class="row">-->
+<!--      <div class="col-md-12">-->
+<!--        <div class="page-head-box">-->
+<!--          <h3>Marital Status</h3>-->
+<!--          <nav aria-label="breadcrumb">-->
+<!--            <ol class="breadcrumb">-->
+<!--              <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>-->
+<!--              <li class="breadcrumb-item active" aria-current="page">Marital Status</li>-->
+<!--            </ol>-->
+<!--          </nav>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; /Page Header &ndash;&gt;-->
+
+<!--    &lt;!&ndash; Search Filter &ndash;&gt;-->
+<!--    <div class="row filter-row">-->
+<!--      <div class="col-md-8"></div>-->
+<!--      <div class="col-md-4">-->
+<!--        <div class="add-emp-section">-->
+<!--          <a class="btn btn-success btn-add-emp" data-bs-toggle="modal" data-bs-target="#add_marital-status"-->
+<!--             style="width: auto;"><i class="fas fa-plus"></i> Add-->
+<!--            Marital Status</a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="col-md-8">-->
+<!--      <input class="form-control center me-2" type="search" [(ngModel)]="searchKey" name="search"-->
+<!--             placeholder="Search" aria-label="Search"> <br>-->
+<!--      <button class="btn btn-primary" type="submit">Search</button>-->
+
+<!--    </div>-->
+<!--    <hr>-->
+<!--    &lt;!&ndash; /Search Filter &ndash;&gt;-->
+
+
+<!--    <div class="row">-->
+
+<!--      <div class="col-md-12">-->
+
+<!--        <div class="table-responsive">-->
+<!--          <table class="table table-striped custom-table mb-0 ">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--              <th>Sr. No</th>-->
+<!--              <th>Status ID </th>-->
+<!--              <th>Status Description </th>-->
+<!--              <th class="text-end">Action</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr-->
+<!--              *ngFor="let marital of maritalData | paginate:{itemsPerPage:tablesize, currentPage: page, totalItems:count} |searchFilter:searchKey:'statusDescription' let i = index">-->
+<!--              <td>{{tablesize *(page-1)+ i+1}}</td>-->
+<!--              <td>{{marital.statusId}}</td>-->
+<!--              <td>{{marital.statusDescription}}</td>-->
+<!--              <td class="text-end ico-sec d-flex justify-content-end">-->
+<!--                <a data-bs-toggle="modal" data-bs-target="#edit_marital-status"-->
+<!--                   (click)="editMarital(marital)"><i class="fas fa-pen"></i></a>-->
+<!--                <a href="#" data-bs-toggle="modal" data-bs-target="#delete_marital-status"-->
+<!--                   (click)="deleteData(marital.statusId)"><i-->
+<!--                  class="far fa-trash-alt"></i></a>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    <hr>-->
+<!--    &lt;!&ndash; Pagination &ndash;&gt;-->
+<!--    <div class="row" style="margin:0;">-->
+<!--      <div class="col-md-12" style="text-align: center;">-->
+<!--                <span>-->
+<!--                    <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>-->
+<!--                </span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Pagination &ndash;&gt;-->
+<!--    &lt;!&ndash; /Page Content &ndash;&gt;-->
+
+<!--    &lt;!&ndash; Add Loan Modal &ndash;&gt;-->
+<!--    <div id="add_marital-status" class="modal custom-modal fade" role="dialog">-->
+<!--      <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--          <div class="modal-header">-->
+<!--            <h5 class="modal-title">Add Marital Status</h5>-->
+<!--            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">-->
+<!--              <i class="fas fa-times" #closeBtn></i>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--          <div class="modal-body">-->
+<!--            <form [formGroup]="MaritalForm">-->
+<!--              <div class="form-group">-->
+<!--                <label> Id <span class="text-danger">*</span></label>-->
+<!--                <input class="form-control" formControlName="statusId" type="text"-->
+<!--                       [ngClass]="{'form-control': true, 'is-invalid': MaritalForm.get('statusId')?.invalid &&-->
+<!--                            (MaritalForm.get('statusId')?.dirty || MaritalForm.get('statusId')?.touched)}">-->
+<!--                <div class="invalid-feedback">-->
+<!--                  This field is required.-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--                <div class="form-group">-->
+<!--                  <label> Status Description <span class="text-danger">*</span></label>-->
+<!--                  <input class="form-control" formControlName="statusDescription" type="text"-->
+<!--                         [ngClass]="{'form-control': true, 'is-invalid': MaritalForm.get('statusDescription')?.invalid &&-->
+<!--                            (MaritalForm.get('statusDescription')?.dirty || MaritalForm.get('statusDescription')?.touched)}">-->
+<!--                  <div class="invalid-feedback">-->
+<!--                    This field is required.-->
+<!--                  </div>-->
+<!--              </div>-->
+
+<!--              <div class="submit-section">-->
+<!--                <button class="btn btn-danger cancel-btn" data-bs-dismiss="modal"-->
+<!--                        aria-label="Close">Cancel</button>-->
+<!--                <button class="btn btn-success submit-btn" (click)="Add()">Submit</button>-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; /Add Loan Modal &ndash;&gt;-->
+
+
+<!--    &lt;!&ndash; Edit Designation Modal &ndash;&gt;-->
+<!--    <div id="edit_marital-status" class="modal custom-modal fade" role="dialog">-->
+<!--      <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--          <div class="modal-header">-->
+<!--            <h5 class="modal-title">Edit Marital Status</h5>-->
+<!--            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">-->
+<!--              <i class="fas fa-times" #closeupdatebtn></i>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--          <div class="modal-body">-->
+<!--            <form [formGroup]="MaritalForm">-->
+
+<!--              <div class="form-group">-->
+<!--                <label> Status Id <span class="text-danger">*</span></label>-->
+<!--                <input class="form-control" formControlName="statusId" type="text">-->
+
+<!--              </div>-->
+<!--              <div class="form-group">-->
+<!--                <label> Status Description <span class="text-danger">*</span></label>-->
+<!--                <input class="form-control" formControlName="statusDescription" type="text">-->
+<!--              </div>-->
+
+<!--              <div class="submit-section">-->
+<!--                <button class="btn btn-danger cancel-btn" data-bs-dismiss="modal"-->
+<!--                        aria-label="Close">Cancel</button>-->
+
+<!--                <button class="btn btn-success submit-btn" (click)="Update()">Update</button>-->
+<!--              </div>-->
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; /Edit Designation Modal &ndash;&gt;-->
+
+
+<!--    &lt;!&ndash; Delete Designation Modal &ndash;&gt;-->
+<!--    <div class="modal custom-modal fade" id="delete_marital-status" role="dialog">-->
+<!--      <div class="modal-dialog modal-dialog-centered">-->
+<!--        <div class="modal-content">-->
+
+<!--          <div class="modal-body">-->
+<!--            <div class="form-header">-->
+<!--              <h3>Delete Marital Status</h3>-->
+<!--              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">-->
+<!--                <i class="fas fa-times" #closedeletebtn></i>-->
+<!--              </button>-->
+<!--              <p>Are you sure want to delete?</p>-->
+<!--            </div>-->
+<!--            <div class="modal-btn delete-action">-->
+<!--              <div class="row">-->
+<!--                <div class="col-6">-->
+<!--                  <a class="btn btn-primary continue-btn"-->
+<!--                     (click)="Delete(maritalData.statusId)">Delete</a>-->
+<!--                </div>-->
+<!--                <div class="col-6">-->
+<!--                  <a href="javascript:void(0);" data-bs-dismiss="modal"-->
+<!--                     class="btn btn-danger btn">Cancel</a>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; /Delete Designation Modal &ndash;&gt;-->
+
+<!--  </div>-->
+<!--</div>-->
+
+<!--</div>-->
+
