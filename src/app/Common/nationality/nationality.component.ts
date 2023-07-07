@@ -9,20 +9,21 @@ import Swal from 'sweetalert2';
 import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
-import {saveAs}  from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { Workbook } from 'exceljs';
 @Component({
-     selector: 'app-nationality',
-     templateUrl: './nationality.component.html',
-    styleUrls: ['./nationality.component.css']
-  
+  selector: 'app-nationality',
+  templateUrl: './nationality.component.html',
+  styleUrls: ['./nationality.component.css']
+
 })
 export class NationalityComponent implements OnInit {
   dataGrid: any;
 
   contentReady($event: any) {
     throw new Error('Method not implemented.');
-    }
+  }
 
 
 
@@ -33,7 +34,7 @@ export class NationalityComponent implements OnInit {
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
- 
+
   // MatPaginator Inputs
   length = 10;
   pageSize = 10;
@@ -44,9 +45,9 @@ export class NationalityComponent implements OnInit {
 
   NationalityForm: FormGroup;
   editData: any;
-  delData: any;         
+  delData: any;
   desobj: Nationality = new Nationality();
- 
+
   NationalityData: any;
 
   // API_URL: string = environment.API_URL;
@@ -70,12 +71,12 @@ export class NationalityComponent implements OnInit {
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -85,37 +86,37 @@ export class NationalityComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
 
 
   // Export function name
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
-    
 
-    // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
-    performLongOperation() {
-      this.dataGrid.instance.beginCustomLoading();
-      // ...
-      this.dataGrid.instance.endCustomLoading();
+
+  // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
+  performLongOperation() {
+    this.dataGrid.instance.beginCustomLoading();
+    // ...
+    this.dataGrid.instance.endCustomLoading();
   }
-  
 
-//#region Close Modal PopUp
+
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -125,9 +126,9 @@ export class NationalityComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Nationality
+  //#region Get All Nationality
 
   getAll() {
     this.NationalityData = [];
@@ -139,7 +140,7 @@ export class NationalityComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -160,7 +161,7 @@ export class NationalityComponent implements OnInit {
     this.NationalityForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editNationality(desModel: Nationality) {

@@ -10,7 +10,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
-import  { saveAs} from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-title',
@@ -26,7 +27,7 @@ export class TitleComponent implements OnInit {
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
-  contentReady($event:any){}
+  contentReady($event: any) { }
   errorMessage = false;
 
   // MatPaginator Inputs
@@ -51,7 +52,7 @@ export class TitleComponent implements OnInit {
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: TitleService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //Title Form
     this.TitleForm = this.formBuilder.group({
@@ -65,14 +66,15 @@ export class TitleComponent implements OnInit {
       branchCode: new FormControl('', [Validators.required])
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
     setTimeout(() => {
-      console.log('Test')}, 300);
+      console.log('Test')
+    }, 300);
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -82,24 +84,24 @@ export class TitleComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
-onExporting(e: { component: any; cancel: boolean; }) {
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet('titleData');
+  //#endregion
+  onExporting(e: ExportingEvent) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('titleData');
 
 
-  exportDataGrid({
-    component: e.component,
-    worksheet,
-    autoFilterEnabled:true,
-  }) .then(() =>{
-    workbook.xlsx.writeBuffer().then((buffer:any) => {
-      saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer: any) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
     });
-  });
-  e.cancel = true;
-}
-//#region Close Modal PopUp
+    e.cancel = true;
+  }
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -109,9 +111,9 @@ onExporting(e: { component: any; cancel: boolean; }) {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Title
+  //#region Get All Title
 
   getAll() {
     this.titleData = [];
@@ -123,7 +125,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -144,7 +146,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
     this.TitleForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editTitle(titleModel: Title) {

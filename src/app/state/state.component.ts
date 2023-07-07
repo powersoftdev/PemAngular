@@ -1,12 +1,13 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {PageEvent} from "@angular/material/paginator";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {State} from "../Model/state";
-import {StateService} from "../Services/state.service";
-import {SwalService} from "../Services/AleartPopUp/swal.service";
-import {Workbook} from "exceljs";
-import {exportDataGrid} from "devextreme/excel_exporter";
-import {saveAs} from "file-saver-es";
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { PageEvent } from "@angular/material/paginator";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { State } from "../Model/state";
+import { StateService } from "../Services/state.service";
+import { SwalService } from "../Services/AleartPopUp/swal.service";
+import { Workbook } from "exceljs";
+import { exportDataGrid } from "devextreme/excel_exporter";
+import { saveAs } from "file-saver-es";
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-state',
@@ -24,7 +25,7 @@ export class StateComponent implements OnInit {
 
   // searchedKeyword: string;
   searchKey: string = "";
-  contentReady($event:any){}
+  contentReady($event: any) { }
   errorMessage = false;
 
 
@@ -42,7 +43,7 @@ export class StateComponent implements OnInit {
   desobj: State = new State();
   //DesignationId: any;
   // designationData: Array<any> = [];
-  stateData:any;
+  stateData: any;
 
   // API_URL: string = environment.API_URL;
   // token: string = environment.loginToken;
@@ -70,10 +71,11 @@ export class StateComponent implements OnInit {
     this.getAll();
     this.getNationalityIdData();
     setTimeout(() => {
-      console.log('Test')}, 300);
+      console.log('Test')
+    }, 300);
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -83,8 +85,8 @@ export class StateComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
-  onExporting(e: { component: any; cancel: boolean; }) {
+  //#endregion
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('stateData');
 
@@ -92,16 +94,16 @@ export class StateComponent implements OnInit {
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -111,22 +113,22 @@ export class StateComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Designation
+  //#region Get All Designation
 
 
   getAll() {
     this.stateData = [];
     this.service.getAll().subscribe(res => {
-        if (res.data != null) {
-          this.stateData = res.data;
-          console
-        }
+      if (res.data != null) {
+        this.stateData = res.data;
+        console
       }
+    }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -148,7 +150,7 @@ export class StateComponent implements OnInit {
     this.StateForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editState(desModel: State) {
@@ -227,7 +229,7 @@ export class StateComponent implements OnInit {
     this.service.getNationalityIdDropdown()
       .subscribe({
         next: resp => {
-          if(resp.data !== null) {
+          if (resp.data !== null) {
             this.nationalityIdData = resp.data
               .map((id: { nationalityId: { toString: () => any; }; }) => id.nationalityId.toString());
             console.log(this.nationalityIdData);

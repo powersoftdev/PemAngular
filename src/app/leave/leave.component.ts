@@ -8,9 +8,10 @@ import { catchError, map, Observable, throwError, VirtualTimeScheduler } from 'r
 import Swal from 'sweetalert2';
 import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
-import {Workbook} from "exceljs";
-import {exportDataGrid} from "devextreme/excel_exporter";
-import {saveAs} from "file-saver-es";
+import { Workbook } from "exceljs";
+import { exportDataGrid } from "devextreme/excel_exporter";
+import { saveAs } from "file-saver-es";
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-leave',
@@ -25,7 +26,7 @@ export class LeaveComponent implements OnInit {
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
-  contentReady($event:any){}
+  contentReady($event: any) { }
   errorMessage = false;
 
   // MatPaginator Inputs
@@ -51,7 +52,7 @@ export class LeaveComponent implements OnInit {
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: LeaveService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //Leave Form
     this.LeaveForm = this.formBuilder.group({
@@ -67,14 +68,15 @@ export class LeaveComponent implements OnInit {
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
-      setTimeout(() => {
-        console.log('Test')}, 300);
+    setTimeout(() => {
+      console.log('Test')
+    }, 300);
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -84,8 +86,8 @@ export class LeaveComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
-  onExporting(e: { component: any; cancel: boolean; }) {
+  //#endregion
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('leaveData');
 
@@ -93,16 +95,16 @@ export class LeaveComponent implements OnInit {
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -112,9 +114,9 @@ export class LeaveComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Leave
+  //#region Get All Leave
 
   getAll() {
     this.leaveData = [];
@@ -126,7 +128,7 @@ export class LeaveComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -148,7 +150,7 @@ export class LeaveComponent implements OnInit {
     this.LeaveForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editLeave(desModel: Leave) {

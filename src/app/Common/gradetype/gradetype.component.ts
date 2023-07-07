@@ -3,8 +3,8 @@ import { Component, destroyPlatform, ElementRef, OnInit, ViewChild } from '@angu
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GradeType } from 'src/app/Model/gradetype';
 import { GradeTypeService } from 'src/app/Services/gradetype.service';
-import { DxDataGridModule,   } from 'devextreme-angular';
-import { DxLoadPanelModule} from 'devextreme-angular';
+import { DxDataGridModule, } from 'devextreme-angular';
+import { DxLoadPanelModule } from 'devextreme-angular';
 
 import { environment } from 'src/environments/environment';
 import { buffer, catchError, map, Observable, throwError, VirtualTimeScheduler } from 'rxjs';
@@ -14,6 +14,7 @@ import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-gradetype',
@@ -22,9 +23,9 @@ import { saveAs } from 'file-saver-es';
 })
 export class GradeTypeComponent implements OnInit {
   dataGrid: any;
-contentReady($event: any) {
-throw new Error('Method not implemented.');
-}
+  contentReady($event: any) {
+    throw new Error('Method not implemented.');
+  }
 
   @ViewChild('closeBtn') closeBtn: ElementRef;
   @ViewChild('closeupdatebtn') closeupdatebtn: any;
@@ -33,7 +34,7 @@ throw new Error('Method not implemented.');
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
- 
+
   // MatPaginator Inputs
   length = 10;
   pageSize = 10;
@@ -41,18 +42,18 @@ throw new Error('Method not implemented.');
 
   // MatPaginator Output
   pageEvent: PageEvent;
-  locationId:string ='';
-  discription:string ='';
+  locationId: string = '';
+  discription: string = '';
   GradeTypeForm: FormGroup;
-  submit:false;
+  submit: false;
   editData: any;
   gradetype: any;
-  delData: any;        
+  delData: any;
   desobj: GradeType = new GradeType();
-  public data : any;
-  
+  public data: any;
+
   GradeTypeData: any;
-  
+
 
   // API_URL: string = environment.API_URL;
   // token: string = environment.loginToken;
@@ -75,14 +76,14 @@ throw new Error('Method not implemented.');
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
 
   }
 
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -94,33 +95,33 @@ throw new Error('Method not implemented.');
   }
 
   // Export function name
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
-    
 
-    // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
-    performLongOperation() {
-      this.dataGrid.instance.beginCustomLoading();
-      // ...
-      this.dataGrid.instance.endCustomLoading();
+
+  // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
+  performLongOperation() {
+    this.dataGrid.instance.beginCustomLoading();
+    // ...
+    this.dataGrid.instance.endCustomLoading();
   }
-  
-//#endregion
 
-//#region Close Modal PopUp
+  //#endregion
+
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -130,9 +131,9 @@ throw new Error('Method not implemented.');
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All GradeType
+  //#region Get All GradeType
 
   getAll() {
     this.GradeTypeData = [];
@@ -144,7 +145,7 @@ throw new Error('Method not implemented.');
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -165,7 +166,7 @@ throw new Error('Method not implemented.');
     this.GradeTypeForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editGradeType(desModel: GradeType) {

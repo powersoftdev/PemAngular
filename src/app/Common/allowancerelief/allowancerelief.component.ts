@@ -9,7 +9,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { AllowanceRelief } from 'src/app/Model/allowancerelief';
 import { exportDataGrid } from 'devextreme/excel_exporter';
-import { saveAs}  from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { Workbook } from 'exceljs';
 @Component({
   selector: 'app-allowancerelief',
@@ -20,9 +21,9 @@ export class AllowanceReliefComponent implements OnInit {
 
   contentReady($event: any) {
     throw new Error('Method not implemented.');
-    }
+  }
 
-    
+
   @ViewChild('closeBtn') closeBtn: ElementRef;
   @ViewChild('closeupdatebtn') closeupdatebtn: any;
   @ViewChild('closedeletebtn') closedeletebtn: any;
@@ -31,7 +32,7 @@ export class AllowanceReliefComponent implements OnInit {
   // searchedKeyword: string;
   searchKey: string = "";
   onSubmit: boolean = true;
- 
+
   // MatPaginator Inputs
   length = 10;
   pageSize = 10;
@@ -42,9 +43,9 @@ export class AllowanceReliefComponent implements OnInit {
 
   AllowanceReliefForm: FormGroup;
   editData: any;
-  delData: any;         
+  delData: any;
   desobj: AllowanceRelief = new AllowanceRelief();
-  
+
   AllowanceReliefData: any;
 
   // API_URL: string = environment.API_URL;
@@ -71,12 +72,12 @@ export class AllowanceReliefComponent implements OnInit {
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -86,9 +87,9 @@ export class AllowanceReliefComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -98,35 +99,35 @@ export class AllowanceReliefComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
 
   // Export function name
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
-    
 
-    // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
-    performLongOperation() {
-      this.dataGrid.instance.beginCustomLoading();
-      // ...
-      this.dataGrid.instance.endCustomLoading();
+
+  // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
+  performLongOperation() {
+    this.dataGrid.instance.beginCustomLoading();
+    // ...
+    this.dataGrid.instance.endCustomLoading();
   }
 
-//#region Get All Designation
+  //#region Get All Designation
 
   getAll() {
     this.AllowanceReliefData = [];
@@ -138,7 +139,7 @@ export class AllowanceReliefComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -161,7 +162,7 @@ export class AllowanceReliefComponent implements OnInit {
     this.AllowanceReliefForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   //#region Edit button pancel click  method
@@ -170,7 +171,7 @@ export class AllowanceReliefComponent implements OnInit {
 
     this.AllowanceReliefForm.controls['fiscalYear'].setValue(desModel.fiscalYear);
     this.AllowanceReliefForm.controls['reliefTypeId'].setValue(desModel.reliefTypeId);
-    
+
     this.AllowanceReliefForm.controls['reliefRate'].setValue(desModel.reliefRate);
     this.AllowanceReliefForm.controls['reliefAmount'].setValue(desModel.reliefAmount);
 

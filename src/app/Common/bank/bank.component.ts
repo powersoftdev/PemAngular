@@ -4,6 +4,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { Bank } from 'src/app/Model/bank';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { BankService } from 'src/app/Services/bank.service';
@@ -18,9 +19,9 @@ export class BankComponent implements OnInit {
 
   dataGrid: any;
   contentReady($event: any) {
-  throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
-  
+
   @ViewChild('closeBtn') closeBtn: ElementRef;
   @ViewChild('closeupdatebtn') closeupdatebtn: any;
   @ViewChild('closedeletebtn') closedeletebtn: any;
@@ -29,12 +30,12 @@ export class BankComponent implements OnInit {
   // searchedKeyword: string;
   searchKey: string = "";
 
-   // MatPaginator Inputs
-   length = 10;
-   pageSize = 10;
-   pageSizeOptions: number[] = [5, 10, 25, 100];
+  // MatPaginator Inputs
+  length = 10;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
 
-   // MatPaginator Output
+  // MatPaginator Output
   pageEvent: PageEvent;
 
   BankForm: FormGroup;
@@ -43,15 +44,15 @@ export class BankComponent implements OnInit {
   desobj: Bank = new Bank();
   //BankId: any;
   // bankData: Array<any> = [];
- bankData: any;
+  bankData: any;
 
- // API_URL: string = environment.API_URL;
+  // API_URL: string = environment.API_URL;
   // token: string = environment.loginToken;
   // childModal: any;
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: BankService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //Bank Form
     this.BankForm = this.formBuilder.group({
@@ -100,12 +101,12 @@ export class BankComponent implements OnInit {
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -117,26 +118,26 @@ export class BankComponent implements OnInit {
   }
 
 
-   // Export function name
-   onExporting(e: { component: any; cancel: boolean; }) {
+  // Export function name
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
-    
-//#endregion
 
-//#region Close Modal PopUp
+  //#endregion
+
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -146,9 +147,9 @@ export class BankComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Bank
+  //#region Get All Bank
 
   getAll() {
     this.bankData = [];
@@ -160,7 +161,7 @@ export class BankComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -171,7 +172,7 @@ export class BankComponent implements OnInit {
     this.desobj.bankAddress2 = this.BankForm.value.bankAddress2;
     this.desobj.bankCity = this.BankForm.value.bankCity;
     this.desobj.bankState = this.BankForm.value.bankState;
-    this.desobj.bankCountry = this.BankForm.value.bankCountry;   
+    this.desobj.bankCountry = this.BankForm.value.bankCountry;
     this.desobj.bankPhone = this.BankForm.value.bankPhone;
     this.desobj.bankFax = this.BankForm.value.bankFax;
     this.desobj.bankContactName = this.BankForm.value.bankContactName;
@@ -184,7 +185,7 @@ export class BankComponent implements OnInit {
     this.desobj.firstDesign = this.BankForm.value.firstDesign;
     this.desobj.secondSign = this.BankForm.value.secondSign;
     this.desobj.secondDesign = this.BankForm.value.secondDesign;
-    this.service.addAndEdit(this.desobj).subscribe (res => {
+    this.service.addAndEdit(this.desobj).subscribe(res => {
       if (res.status == "Success") {
         this.swalService.SwalAlertMessage(true, "success", "Your Data Inserted Succusfully.", true, false);
         this.getAll();
@@ -199,7 +200,7 @@ export class BankComponent implements OnInit {
     this.BankForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editBank(desModel: Bank) {
@@ -213,7 +214,7 @@ export class BankComponent implements OnInit {
     this.BankForm.controls['departmentId'].setValue(desModel.departmentId);
     this.BankForm.controls['lockedBy'].setValue(desModel.lockedBy);
     this.BankForm.controls['lockTs'].setValue(desModel.lockTs);
-    this.BankForm.controls['branchCode'].setValue(desModel.branchCode); 
+    this.BankForm.controls['branchCode'].setValue(desModel.branchCode);
     this.BankForm.controls['bankName'].setValue(desModel.bankName);
     this.BankForm.controls['bankAddress1'].setValue(desModel.bankAddress1);
     this.BankForm.controls['bankAddress2'].setValue(desModel.bankAddress2);

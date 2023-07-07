@@ -8,7 +8,10 @@ import { jsPDF } from 'jspdf';
 import * as ExcelJS from 'exceljs';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
-import { ReportsService } from 'src/app/Services/Reports-Services/Employee Details Service/Employee-Details-reports.service';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
+import { ReportsService } from 'src/app/Services/Reports-Service/employee-details-reports.service.service';
+
+// import { ReportsService } from 'src/app/Services/Reports-Services/Employee Details Service/Employee-Details-reports.service';
 @Component({
   selector: 'app-lateness-reports',
   templateUrl: './lateness-reports.component.html',
@@ -21,7 +24,7 @@ export class LatenessReportsComponent implements OnInit {
   constructor(private service: ReportsService) { }
 
   ngOnInit(): void {
-   
+
     this.getLatenessData();
   }
 
@@ -29,16 +32,16 @@ export class LatenessReportsComponent implements OnInit {
   getLatenessData() {
     debugger;
     this.service.getLatenessReportDetails().subscribe(res => {
-debugger;
+      debugger;
       if (res.data != null) {
         debugger;
-             this.LatenessData = res.data;
-            }
-          });
+        this.LatenessData = res.data;
+      }
+    });
   }
   //#endregion
 
-//#region For Export to PDF , XLSX, & CSV.
+  //#region For Export to PDF , XLSX, & CSV.
   onExporting(e: any) {
     //#region Export to PDF
     if (e.format == "pdf") {
@@ -123,5 +126,5 @@ debugger;
     }
     //#endregion
   }
-//#endregion
+  //#endregion
 }

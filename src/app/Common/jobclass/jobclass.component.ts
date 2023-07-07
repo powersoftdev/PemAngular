@@ -7,6 +7,7 @@ import { JobclassService } from 'src/app/Services/jobclass.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-jobclass',
@@ -17,9 +18,9 @@ export class JobclassComponent implements OnInit {
 
   dataGrid: any;
   contentReady($event: any) {
-  throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
-  
+
   @ViewChild('closeBtn') closeBtn: ElementRef;
   @ViewChild('closeupdatebtn') closeupdatebtn: any;
   @ViewChild('closedeletebtn') closedeletebtn: any;
@@ -27,7 +28,7 @@ export class JobclassComponent implements OnInit {
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
- 
+
   // MatPaginator Inputs
   length = 10;
   pageSize = 10;
@@ -50,7 +51,7 @@ export class JobclassComponent implements OnInit {
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: JobclassService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //Jobclass Form
     this.JobclassForm = this.formBuilder.group({
@@ -59,16 +60,16 @@ export class JobclassComponent implements OnInit {
       departmentId: new FormControl('', [Validators.required]),
       jobClassId: new FormControl('', [Validators.required]),
       jobClassDescription: new FormControl('', [Validators.required]),
-      
+
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -78,28 +79,28 @@ export class JobclassComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
 
 
   // Export function name
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -109,9 +110,9 @@ export class JobclassComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Jobclass
+  //#region Get All Jobclass
 
   getAll() {
     this.jobclassData = [];
@@ -123,7 +124,7 @@ export class JobclassComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -144,7 +145,7 @@ export class JobclassComponent implements OnInit {
     this.JobclassForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editJobclass(desModel: Jobclass) {

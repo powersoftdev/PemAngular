@@ -6,6 +6,7 @@ import { jsPDF } from 'jspdf';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-reports',
@@ -23,18 +24,18 @@ export class ReportsComponent implements OnInit {
     this.getAll();
 
   }
-//#region Get all Designation Data
+  //#region Get all Designation Data
   getAll() {
     this.service.getAll().subscribe(res => {
       this.designationData = res.data;
     })
   }
-//#endregion 
-  
+  //#endregion 
 
-// Export pdf & xlsx
+
+  // Export pdf & xlsx
   onExporting(e: any) {
-      //#region work for pdf 
+    //#region work for pdf 
     if (e.format == "pdf") {
       //Work for PDF
       const doc = new jsPDF();
@@ -46,10 +47,10 @@ export class ReportsComponent implements OnInit {
         doc.save('Designation.pdf');
       });
     }
-//#endregion
+    //#endregion
 
-//#region work for xlsx
-    else if (e.format == "xlsx") {  
+    //#region work for xlsx
+    else if (e.format == "xlsx") {
       //Work for xlsx
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet('Employees');

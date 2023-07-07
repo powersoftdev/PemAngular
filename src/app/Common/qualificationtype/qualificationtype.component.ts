@@ -8,7 +8,8 @@ import { catchError, map, Observable, throwError, VirtualTimeScheduler } from 'r
 import Swal from 'sweetalert2';
 import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
-import {saveAs}  from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 @Component({
@@ -19,7 +20,7 @@ import { exportDataGrid } from 'devextreme/excel_exporter';
 export class QualificationTypeComponent implements OnInit {
 
   contentReady($event: any) {
-  throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
 
   @ViewChild('closeBtn') closeBtn: ElementRef;
@@ -27,10 +28,10 @@ export class QualificationTypeComponent implements OnInit {
   @ViewChild('closedeletebtn') closedeletebtn: any;
   public searchFilter: any = '';
   public nameSearch: string = '';
-  qualifiationClassData:any[]=[]
+  qualifiationClassData: any[] = []
   // searchedKeyword: string;
   searchKey: string = "";
- 
+
   // MatPaginator Inputs
   length = 10;
   pageSize = 10;
@@ -38,14 +39,14 @@ export class QualificationTypeComponent implements OnInit {
 
   // MatPaginator Output
   pageEvent: PageEvent;
-  locationId:string ='';
-  discription:string ='';
+  locationId: string = '';
+  discription: string = '';
   QualificationTypeForm: FormGroup;
-  submit:false;
+  submit: false;
   editData: any;
-  delData: any;         
+  delData: any;
   desobj: QualificationType = new QualificationType();
-  public data : any;
+  public data: any;
   //DesignationId: any;
   // designationData: Array<any> = [];
   QualificationTypeData: any;
@@ -74,14 +75,14 @@ export class QualificationTypeComponent implements OnInit {
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
 
   }
 
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -91,9 +92,9 @@ export class QualificationTypeComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -103,9 +104,9 @@ export class QualificationTypeComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All QualificationType
+  //#region Get All QualificationType
 
   getAll() {
     this.QualificationTypeData = [];
@@ -117,35 +118,35 @@ export class QualificationTypeComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
 
 
   // Export function name
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
-    
 
-    // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
-    performLongOperation() {
-      this.dataGrid.instance.beginCustomLoading();
-      // ...
-      this.dataGrid.instance.endCustomLoading();
+
+  // @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
+  performLongOperation() {
+    this.dataGrid.instance.beginCustomLoading();
+    // ...
+    this.dataGrid.instance.endCustomLoading();
   }
-  
+
 
   //#region Add button  click  method
   Add() {
@@ -168,7 +169,7 @@ export class QualificationTypeComponent implements OnInit {
     this.QualificationTypeForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editQualificationType(desModel: QualificationType) {
@@ -247,22 +248,22 @@ export class QualificationTypeComponent implements OnInit {
   }
 
 
-  getQualificationClass(){
+  getQualificationClass() {
     this.service.getqualificationClassDropdown()
-    .subscribe({
-      next: resp => {
-        if(resp.data !==null){
-          this.qualifiationClassData = resp.data;
-          const list: any [] =resp.data;
-          this.qualifiationClassData = list.map(d=>(d.qualificationclass))
-          console.log(this.qualifiationClassData)
+      .subscribe({
+        next: resp => {
+          if (resp.data !== null) {
+            this.qualifiationClassData = resp.data;
+            const list: any[] = resp.data;
+            this.qualifiationClassData = list.map(d => (d.qualificationclass))
+            console.log(this.qualifiationClassData)
+          }
+        },
+        error: err => console.error(err),
+        complete: () => {
+
         }
-      },
-      error: err => console.error(err),
-      complete: () =>{
-        
-      }
-    })
+      })
   }
 
   //#endregion

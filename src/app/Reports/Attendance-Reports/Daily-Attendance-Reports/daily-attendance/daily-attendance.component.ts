@@ -8,6 +8,7 @@ import { jsPDF } from 'jspdf';
 import * as ExcelJS from 'exceljs';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { FormBuilder, FormControl, FormGroup, MinLengthValidator, Validators } from '@angular/forms';
 
 import { DatePipe } from '@angular/common';
@@ -30,8 +31,8 @@ export class DailyAttendanceComponent implements OnInit {
     this.getDateForm = this.formbuilder.group({
       startDate: new FormControl('', [Validators.required]),
       endDate: new FormControl('', [Validators.required])
-    }, {validator: this.dateLessThan('startDate', 'endDate')});
-    
+    }, { validator: this.dateLessThan('startDate', 'endDate') });
+
   }
 
   ngOnInit(): void {
@@ -41,42 +42,42 @@ export class DailyAttendanceComponent implements OnInit {
   }
 
 
-//#region For get daily attendance summary 
+  //#region For get daily attendance summary 
   getAttendance() {
-debugger;
+    debugger;
     this.PeriodFrom = this.getDateForm.value.startDate;
     this.PeriodTo = this.getDateForm.value.endDate;
 
     this.service.GetDailyAttendanceSummary(this.PeriodFrom, this.PeriodTo).subscribe(res => {
-debugger;
+      debugger;
       if (res.data != null) {
         debugger
-      this.attendanceData = res.data;
+        this.attendanceData = res.data;
       }
-      
+
     });
 
 
 
   }
-//#endregion
+  //#endregion
 
-//#region FOR DATE VALIDATIONS
+  //#region FOR DATE VALIDATIONS
   dateLessThan(from: string, to: string) {
-    return (group: FormGroup): {[key: string]: any} => {
-     let f = group.controls[from];
-     let t = group.controls[to];
-     if (f.value >= t.value) {
-       return {
-         dates: "Date from should be less than Period Form"
-       };
-     }
-     return {};
+    return (group: FormGroup): { [key: string]: any } => {
+      let f = group.controls[from];
+      let t = group.controls[to];
+      if (f.value >= t.value) {
+        return {
+          dates: "Date from should be less than Period Form"
+        };
+      }
+      return {};
     }
   }
-//#endregion
- 
-// #region for Exporting PDF & XLSX, CSV
+  //#endregion
+
+  // #region for Exporting PDF & XLSX, CSV
   onExporting(e: any) {
     //#region Export to PDF
     if (e.format == "pdf") {

@@ -8,7 +8,8 @@ import { catchError, map, Observable, throwError, VirtualTimeScheduler } from 'r
 import Swal from 'sweetalert2';
 import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
-import {saveAs}  from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 @Component({
@@ -18,11 +19,11 @@ import { exportDataGrid } from 'devextreme/excel_exporter';
 })
 export class InstitutionComponent implements OnInit {
 
-  
+
   contentReady($event: any) {
     throw new Error('Method not implemented.');
-    }
-  
+  }
+
   @ViewChild('closeBtn') closeBtn: ElementRef;
   @ViewChild('closeupdatebtn') closeupdatebtn: any;
   @ViewChild('closedeletebtn') closedeletebtn: any;
@@ -30,7 +31,7 @@ export class InstitutionComponent implements OnInit {
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
- 
+
   // MatPaginator Inputs
   length = 10;
   pageSize = 10;
@@ -38,14 +39,14 @@ export class InstitutionComponent implements OnInit {
 
   // MatPaginator Output
   pageEvent: PageEvent;
-  institutionId:string ='';
-  institutionDiscription:string ='';
+  institutionId: string = '';
+  institutionDiscription: string = '';
   InstitutionForm: FormGroup;
-  submit:false;
+  submit: false;
   editData: any;
-  delData: any;         
+  delData: any;
   desobj: Institution = new Institution();
-  public data : any;
+  public data: any;
   //DesignationId: any;
   // designationData: Array<any> = [];
   institutionData: any;
@@ -71,7 +72,7 @@ export class InstitutionComponent implements OnInit {
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
@@ -87,30 +88,30 @@ export class InstitutionComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
 
 
 
 
   // Export function name
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('GradeTypeData');
 
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
   }
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -120,9 +121,9 @@ export class InstitutionComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Designation
+  //#region Get All Designation
 
   getAll() {
     this.institutionData = [];
@@ -134,7 +135,7 @@ export class InstitutionComponent implements OnInit {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -155,7 +156,7 @@ export class InstitutionComponent implements OnInit {
     this.InstitutionForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editInstitution(desModel: Institution) {

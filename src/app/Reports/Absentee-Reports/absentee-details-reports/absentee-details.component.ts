@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {  exportDataGrid as XLSDataGrid } from 'devextreme/excel_exporter';
+import { exportDataGrid as XLSDataGrid } from 'devextreme/excel_exporter';
 import { ReportsService } from 'src/app/Services/Reports-Service/employee-details-reports.service.service';
 
 import { exportDataGrid as csv, exportDataGrid as Csv } from 'devextreme/excel_exporter';
@@ -10,6 +10,7 @@ import * as ExcelJS from 'exceljs';
 
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 @Component({
   selector: 'app-absentee-details',
   templateUrl: './absentee-details.component.html',
@@ -32,12 +33,12 @@ export class AbsenteeDetailsComponent implements OnInit {
       if (res.data != null) {
 
         this.absenteeDetailsData = res.data;
-              }
+      }
     })
 
   }
   //#endregion
- 
+
   //#region Export to PDF , XLSX, & CSV
   onExporting(e: any) {
     //#region Export to PDF

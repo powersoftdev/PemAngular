@@ -15,12 +15,12 @@ import { DesignationComponent } from './Common/designation/designation.component
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 
-import {DxButtonModule, DxToolbarModule,} from 'devextreme-angular';
+import { DxButtonModule, DxToolbarModule, } from 'devextreme-angular';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { ReportsComponent } from './Common/reports/reports.component';
 import { DxHtmlEditorModule, DxCheckBoxModule } from 'devextreme-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { SearchFilterPipe } from './Filters/search-filter.pipe';
 //Search Filter
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
@@ -30,7 +30,7 @@ import { AllowanceReliefComponent } from './Common/allowancerelief/allowancereli
 import { LocationComponent } from './Common/location/location.component';
 import { NationalityComponent } from './Common/nationality/nationality.component';
 import { QualificationTypeComponent } from './Common/qualificationtype/qualificationtype.component';
-import {GradeTypeComponent} from './Common/gradetype/gradetype.component';
+import { GradeTypeComponent } from './Common/gradetype/gradetype.component';
 import { InstitutionComponent } from './Common/institution/institution.component';
 import { AbsenteeDetailsComponent } from './Reports/Absentee-Reports/absentee-details-reports/absentee-details.component';
 import { AbsenteeSummaryReportsComponent } from './Reports/Absentee-Reports/absentee-summary-reports/absentee-summary-reports.component';
@@ -39,11 +39,11 @@ import { MonthlySummaryReportComponent } from './Reports/Attendance-Reports/mont
 import { DeductionReportComponent } from './Reports/Deduction-Reports/deduction-reports.component';
 import { LatenessReportsComponent } from './Reports/Lateness-Reports/Lateness-Details-Reports/lateness-reports/lateness-reports.component';
 import { LatenessSummaryReportComponent } from './Reports/Lateness-Reports/Lateness-Summary-Reports/lateness-summary-reports/lateness-summary-reports.component';
- import {PayrollPayTypeComponent} from './Common/payments/payroll-paytype/payroll-paytype.component';
-import {JobclassComponent} from './Common/jobclass/jobclass.component'
-import {CategoryComponent} from './Common/category/category.component'
-import {CoursetypeComponent} from './Common/coursetype/coursetype.component'
-import {BankComponent} from './Common/bank/bank.component'
+import { PayrollPayTypeComponent } from './Common/payments/payroll-paytype/payroll-paytype.component';
+import { JobclassComponent } from './Common/jobclass/jobclass.component'
+import { CategoryComponent } from './Common/category/category.component'
+import { CoursetypeComponent } from './Common/coursetype/coursetype.component'
+import { BankComponent } from './Common/bank/bank.component'
 import { LeaveComponent } from './leave/leave.component';
 import { TitleComponent } from './title/title.component';
 import { LanguageComponent } from './language/language.component'
@@ -102,8 +102,8 @@ import { CostCenterComponent } from './costcenter/costcenter.component';
     offenceComponent,
     HrReasonComponent,
     CostCenterComponent,
-  
-  
+
+
 
 
 
@@ -135,4 +135,4 @@ import { CostCenterComponent } from './costcenter/costcenter.component';
 export class AppModule {
 
 
- }
+}

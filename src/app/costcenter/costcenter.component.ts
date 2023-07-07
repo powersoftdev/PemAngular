@@ -10,7 +10,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
-import  { saveAs} from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 @Component({
   selector: 'app-costcenter',
   templateUrl: './costcenter.component.html',
@@ -25,7 +26,7 @@ export class CostCenterComponent implements OnInit {
   // searchedKeyword: string;
   searchKey: string = "";
   glaccountNumberData: any[] = []
-  contentReady($event:any){}
+  contentReady($event: any) { }
   errorMessage = false;
 
   // MatPaginator Inputs
@@ -44,7 +45,7 @@ export class CostCenterComponent implements OnInit {
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: costcenterService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //cost center Form
     this.costcenterForm = this.formBuilder.group({
@@ -60,17 +61,18 @@ export class CostCenterComponent implements OnInit {
       branchCode: new FormControl('', [Validators.required])
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
-      this.getGlaccountNumberData();
-      setTimeout(() => {
-        console.log('Test')}, 300);
+    this.getGlaccountNumberData();
+    setTimeout(() => {
+      console.log('Test')
+    }, 300);
   }
   ngOnChanges(changes: SimpleChanges) {
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -80,25 +82,25 @@ export class CostCenterComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
-onExporting(e: { component: any; cancel: boolean; }) {
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet('costData');
+  //#endregion
+  onExporting(e: ExportingEvent) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('costData');
 
 
-  exportDataGrid({
-    component: e.component,
-    worksheet,
-    autoFilterEnabled:true,
-  }) .then(() =>{
-    workbook.xlsx.writeBuffer().then((buffer) => {
-      saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
     });
-  });
-  e.cancel = true;
-}
+    e.cancel = true;
+  }
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -108,9 +110,9 @@ onExporting(e: { component: any; cancel: boolean; }) {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All cost center
+  //#region Get All cost center
 
   getAll() {
     this.costData = [];
@@ -122,7 +124,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -145,7 +147,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
     this.costcenterForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editcostcenter(costModel: costcenter) {
@@ -204,7 +206,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
   //#region For Delete cost center
 
   public costId: any
-  deleteData( costModel: string) {
+  deleteData(costModel: string) {
 
     this.costId = costModel
 
@@ -227,9 +229,9 @@ onExporting(e: { component: any; cancel: boolean; }) {
     this.service.getGlaccountNumbers()
       .subscribe({
         next: resp => {
-          if(resp.data !== null) {
+          if (resp.data !== null) {
             this.glaccountNumberData = resp.data;
-            const list: any [] = resp.data;
+            const list: any[] = resp.data;
             this.glaccountNumberData = list.map(d => (d.glaccountNumber + " - " + d.glaccountName))
           }
         },

@@ -8,6 +8,7 @@ import { jsPDF } from 'jspdf';
 import * as ExcelJS from 'exceljs';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DeductionService } from 'src/app/Services/Reports-Services/Deduction-Reports-Service/deduction.service';
 @Component({
@@ -62,9 +63,9 @@ export class DeductionReportComponent implements OnInit {
       return {};
     }
   }
-//#endregion
- 
-//#region Export to XLSX , PDF & CSV functionality
+  //#endregion
+
+  //#region Export to XLSX , PDF & CSV functionality
   onExporting(e: any) {
 
     //#region xport to PDF

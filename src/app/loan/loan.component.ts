@@ -1,14 +1,15 @@
-import {Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {SwalService} from "../Services/AleartPopUp/swal.service";
-import {Loan} from "../Model/loan";
-import {PageEvent} from "@angular/material/paginator";
-import {LoanService} from "../Services/loan.service";
+import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { SwalService } from "../Services/AleartPopUp/swal.service";
+import { Loan } from "../Model/loan";
+import { PageEvent } from "@angular/material/paginator";
+import { LoanService } from "../Services/loan.service";
 //import {InterestRateValidator} from "../util/custom-field-validator";
 import { DxDataGridModule } from 'devextreme-angular';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
-import  { saveAs} from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-loan',
@@ -26,7 +27,7 @@ export class LoanComponent implements OnInit {
 
   interestTypIdData: any[] = []
   glaccountNumberData: any[] = []
-  contentReady($event:any){}
+  contentReady($event: any) { }
 
   // searchedKeyword: string;
   searchKey: string = "";
@@ -76,7 +77,8 @@ export class LoanComponent implements OnInit {
     this.getInterestTypeIdData();
     this.getGlaccountNumberData();
     setTimeout(() => {
-      console.log('Test')}, 300);
+      console.log('Test')
+    }, 300);
   }
 
 
@@ -85,7 +87,7 @@ export class LoanComponent implements OnInit {
   }
 
 
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -95,9 +97,9 @@ export class LoanComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
-  onExporting(e: { component: any; cancel: boolean; }) {
+  onExporting(e: ExportingEvent) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('loanData');
 
@@ -105,10 +107,10 @@ export class LoanComponent implements OnInit {
     exportDataGrid({
       component: e.component,
       worksheet,
-      autoFilterEnabled:true,
-    }) .then(() =>{
+      autoFilterEnabled: true,
+    }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
       });
     });
     e.cancel = true;
@@ -116,7 +118,7 @@ export class LoanComponent implements OnInit {
 
 
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -126,21 +128,21 @@ export class LoanComponent implements OnInit {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Designation
+  //#region Get All Designation
 
 
   getAll() {
     this.loanData = [];
     this.service.getAll().subscribe(res => {
-        if (res.data != null) {
-          this.loanData = res.data;
-        }
+      if (res.data != null) {
+        this.loanData = res.data;
       }
+    }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -163,7 +165,7 @@ export class LoanComponent implements OnInit {
 
     this.loanForm.reset();
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editLoan(desModel: Loan) {
@@ -269,10 +271,10 @@ export class LoanComponent implements OnInit {
   //
   // //#region For Delete Designation
   //
-   public DesId: any
+  public DesId: any
   deleteData(desModel: string) {
     this.DesId = desModel
-}
+  }
 
 
   Delete(loanTypeId: string) {
@@ -291,7 +293,7 @@ export class LoanComponent implements OnInit {
     this.service.getInterestTypeIdDropdown()
       .subscribe({
         next: resp => {
-          if(resp.data !== null) {
+          if (resp.data !== null) {
             this.interestTypIdData = resp.data;
             console.log(this.interestTypIdData);
           }
@@ -317,9 +319,9 @@ export class LoanComponent implements OnInit {
     this.service.getGlaccountNumbers()
       .subscribe({
         next: resp => {
-          if(resp.data !== null) {
+          if (resp.data !== null) {
             this.glaccountNumberData = resp.data;
-            const list: any [] = resp.data;
+            const list: any[] = resp.data;
             this.glaccountNumberData = list.map(d => (d.glaccountNumber + " - " + d.glaccountName))
           }
         },

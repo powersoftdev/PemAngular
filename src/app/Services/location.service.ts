@@ -7,7 +7,7 @@ import { Location } from '../Model/location';
   providedIn: 'root'
 })
 export class LocationService {
- 
+
   public search = new BehaviorSubject<string>("");
 
   private API_URL: string = environment.API_URL;
@@ -29,22 +29,22 @@ export class LocationService {
 
 
 
-  
-//For Get All Location Data
+
+  //For Get All Location Data
   public getAll(): Observable<Location> {
 
     return this.http.get<Location>(this.API_URL + "/api/GetPayrollLocation/" + this.token, this.requestOptions);
 
   }
 
-//For Location Add
+  //For Location Add
   public addAndEdit(des: Location): Observable<any> {
 
     const body = JSON.stringify(des);
 
     return this.http.post<any>(this.API_URL + '/api/AddPayrollLocation/' + this.token, body, this.requestOptions);
   }
- 
+
 
   //For Location Update
   public update(Location: Location): Observable<Location> {
@@ -58,8 +58,6 @@ export class LocationService {
 
   //For Location Delete
   public delete(locationId: string): Observable<any> {
-    debugger;
-
     return this.http.delete<any>(this.API_URL + '/api/DeletePayrollLocation/' + this.token + "?" + "LocationId=" + locationId, this.requestOptions);
   }
 

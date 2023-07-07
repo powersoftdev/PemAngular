@@ -4,12 +4,12 @@ import { PaymentService } from 'src/app/Services/payrollService/payroll.service'
 
 import { DxTreeViewComponent } from "devextreme-angular";
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { paymentTypesDetail,  PayrollModel  } from 'src/app/Model/payrollModel';
+import { paymentTypesDetail, PayrollModel } from 'src/app/Model/payrollModel';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 
-import { exportDataGrid , exportDataGrid as XLSDataGrid } from 'devextreme/excel_exporter';
+import { exportDataGrid, exportDataGrid as XLSDataGrid } from 'devextreme/excel_exporter';
 
-import {exportDataGrid as csv, exportDataGrid as Csv} from 'devextreme/excel_exporter';
+import { exportDataGrid as csv, exportDataGrid as Csv } from 'devextreme/excel_exporter';
 
 import { exportDataGrid as PDFGrid } from 'devextreme/pdf_exporter';
 import { jsPDF } from 'jspdf';
@@ -17,9 +17,10 @@ import * as ExcelJS from 'exceljs';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { ModalService } from 'src/app/Services/ModalService.ts/modal.service';
 import * as $ from 'jquery';
-import{ DxToolbarModule} from "devextreme-angular";
+import { DxToolbarModule } from "devextreme-angular";
 // import DevExpress from 'devextreme';
 
 // import DevExpress from 'devextreme/bundles/dx.all';
@@ -34,7 +35,7 @@ import{ DxToolbarModule} from "devextreme-angular";
 export class PayrollPayTypeComponent implements OnInit {
   @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
 
-//#region
+  //#region
 
   @ViewChild('draggable') public draggableElement: ElementRef;
   @ViewChild(DxTreeViewComponent) treeView: any;
@@ -48,7 +49,7 @@ export class PayrollPayTypeComponent implements OnInit {
   public dataSource: any;
   public headerFilterData: any;
   public editPayrollTypeFormData: any;
-  showEditIcon:boolean = false
+  showEditIcon: boolean = false
   public PayrollForm: FormGroup;
   public AddPayrollForm: FormGroup
   public payrollObj: PayrollModel = new PayrollModel();
@@ -104,17 +105,17 @@ export class PayrollPayTypeComponent implements OnInit {
   name = 'Angular ' + VERSION.major;
   dynamicArrayData: any = [];
   newDynamic: any;
-  dropdownDataArray: any=[];
+  dropdownDataArray: any = [];
   nextNewRow: boolean = false;
 
 
 
-  valid:boolean=false;
+  valid: boolean = false;
   constructor(private ref: ChangeDetectorRef, private payrollService: PaymentService, private formbuilder: FormBuilder, private swalService: SwalService, private modalService: ModalService) {
     this.isGridBoxOpened = false;
 
     this.PayrollForm = this.formbuilder.group({
-      payTypeId: new FormControl( '', [Validators.required]),
+      payTypeId: new FormControl('', [Validators.required]),
       payTypeDescription: new FormControl('', [Validators.required]),
       attrDescription: new FormControl('', [Validators.required]),
       operatorId: new FormControl('', [Validators.required]),
@@ -133,35 +134,35 @@ export class PayrollPayTypeComponent implements OnInit {
       ignoreHourlyRate: new FormControl(''),
       billingItem: new FormControl(''),
       showBalanceOnSlip: new FormControl(''),
-       // EditNewLineInput: new FormControl(''),
-       EditNewLineInput1 :  new FormControl(''),
-       EditNewLineInput2 :  new FormControl(''),
-       EditNewLineInput3 :  new FormControl(''),
-       EditNewLineInput4 :  new FormControl(''),
-       EditNewLineInput5 :  new FormControl(''),
-       EditNewLineInput6 :  new FormControl(''),
-       EditNewLineInput7 :  new FormControl(''),
-       EditNewLineInput8 :  new FormControl(''),
-       EditNewLineInput9 :  new FormControl(''),
-       EditNewLineInput10 :  new FormControl(''),
-       EditNewLineInput11 :  new FormControl(''),
-       EditNewLineInput12:  new FormControl(''),
-       EditNewLineInput13 :  new FormControl(''),
-       EditNewLineInput14 :  new FormControl(''),
-       EditNewLineInput15 :  new FormControl(''),
+      // EditNewLineInput: new FormControl(''),
+      EditNewLineInput1: new FormControl(''),
+      EditNewLineInput2: new FormControl(''),
+      EditNewLineInput3: new FormControl(''),
+      EditNewLineInput4: new FormControl(''),
+      EditNewLineInput5: new FormControl(''),
+      EditNewLineInput6: new FormControl(''),
+      EditNewLineInput7: new FormControl(''),
+      EditNewLineInput8: new FormControl(''),
+      EditNewLineInput9: new FormControl(''),
+      EditNewLineInput10: new FormControl(''),
+      EditNewLineInput11: new FormControl(''),
+      EditNewLineInput12: new FormControl(''),
+      EditNewLineInput13: new FormControl(''),
+      EditNewLineInput14: new FormControl(''),
+      EditNewLineInput15: new FormControl(''),
 
-       EditLineoperatorId1: new FormControl(''),
-       EditLineoperatorId2: new FormControl(''),
-       EditLineoperatorId3: new FormControl(''),
-       EditLineoperatorId4: new FormControl(''),
-       EditLineoperatorId5: new FormControl(''),
-       EditLineoperatorId6: new FormControl(''),
-       EditLineoperatorId7: new FormControl(''),
-       EditLineoperatorId8: new FormControl(''),
-       EditLineoperatorId9: new FormControl(''),
-       EditLineoperatorId10: new FormControl(''),
-       EditLineoperatorId11: new FormControl(''),
-       EditLineoperatorId12: new FormControl(''),
+      EditLineoperatorId1: new FormControl(''),
+      EditLineoperatorId2: new FormControl(''),
+      EditLineoperatorId3: new FormControl(''),
+      EditLineoperatorId4: new FormControl(''),
+      EditLineoperatorId5: new FormControl(''),
+      EditLineoperatorId6: new FormControl(''),
+      EditLineoperatorId7: new FormControl(''),
+      EditLineoperatorId8: new FormControl(''),
+      EditLineoperatorId9: new FormControl(''),
+      EditLineoperatorId10: new FormControl(''),
+      EditLineoperatorId11: new FormControl(''),
+      EditLineoperatorId12: new FormControl(''),
     });
 
     this.AddPayrollForm = this.formbuilder.group({
@@ -185,19 +186,19 @@ export class PayrollPayTypeComponent implements OnInit {
       AddbillingItem: new FormControl(''),
       AddshowBalanceOnSlip: new FormControl(''),
       // AddNewLineInput: new FormControl(''),
-      AddNewLineInput1:new FormControl(''),
-      AddNewLineInput2:new FormControl(''),
-      AddNewLineInput3:new FormControl(''),
-      AddNewLineInput4:new FormControl(''),
-      AddNewLineInput5:new FormControl(''),
-      AddNewLineInput6:new FormControl(''),
-      AddNewLineInput7:new FormControl(''),
-      AddNewLineInput8:new FormControl(''),
-      AddNewLineInput9:new FormControl(''),
-      AddNewLineInput10:new FormControl(''),
-      AddNewLineInput11:new FormControl(''),
+      AddNewLineInput1: new FormControl(''),
+      AddNewLineInput2: new FormControl(''),
+      AddNewLineInput3: new FormControl(''),
+      AddNewLineInput4: new FormControl(''),
+      AddNewLineInput5: new FormControl(''),
+      AddNewLineInput6: new FormControl(''),
+      AddNewLineInput7: new FormControl(''),
+      AddNewLineInput8: new FormControl(''),
+      AddNewLineInput9: new FormControl(''),
+      AddNewLineInput10: new FormControl(''),
+      AddNewLineInput11: new FormControl(''),
       NewLineoperatorId: new FormControl(''),
-   });
+    });
 
   }
 
@@ -316,96 +317,90 @@ export class PayrollPayTypeComponent implements OnInit {
   }
   //#endregion Add payroll PayType
 
-  save()
-  {
-  if(this.nextNewRow == false)
-  {
-     debugger
+  save() {
+    if (this.nextNewRow == false) {
+      debugger
 
-    this.showEditIcon = true
-    this.onSelectClickDataObj.operatorId = this.AddPayrollForm.value?.NewLineoperatorId;
-    this.dropdownDataArray.push(this.onSelectClickDataObj)
-    this.nextNewRow = true;
+      this.showEditIcon = true
+      this.onSelectClickDataObj.operatorId = this.AddPayrollForm.value?.NewLineoperatorId;
+      this.dropdownDataArray.push(this.onSelectClickDataObj)
+      this.nextNewRow = true;
+      debugger
+    }
+  }
+
+  saveEdit(indexNo: number) {
+    if (this.nextNewRow == false) {
+      debugger
+
+      this.showEditIcon = true
+      this.onSelectClickDataObj.operatorId = this.PayrollForm.value?.["EditLineoperatorId" + (indexNo)];
+      this.dropdownDataArray.push(this.onSelectClickDataObj)
+      this.nextNewRow = true;
+      debugger
+    }
+  }
+
+
+  saveData(selectDatata: any) {
     debugger
-  }
-  }
-
-  saveEdit(indexNo:number)
-  {
-  if(this.nextNewRow == false)
-  {
-     debugger
-
-    this.showEditIcon = true
-    this.onSelectClickDataObj.operatorId = this.PayrollForm.value?.["EditLineoperatorId"+(indexNo)];
-    this.dropdownDataArray.push(this.onSelectClickDataObj)
-    this.nextNewRow = true;
-    debugger
-  }
-  }
-
-
-  saveData(selectDatata:any)
-  {
-     debugger
-     this.dropdowndataObj=new paymentTypesDetail();
-     this.dropdowndataObj.companyId = selectDatata.data.companyId;
-     this.dropdowndataObj.divisionId = selectDatata.data.divisionId;
-     this.dropdowndataObj.departmentId = selectDatata.data.departmentId;
-     this.dropdowndataObj.payTypeId = this.AddPayrollForm.value.AddpayTypeId;
+    this.dropdowndataObj = new paymentTypesDetail();
+    this.dropdowndataObj.companyId = selectDatata.data.companyId;
+    this.dropdowndataObj.divisionId = selectDatata.data.divisionId;
+    this.dropdowndataObj.departmentId = selectDatata.data.departmentId;
+    this.dropdowndataObj.payTypeId = this.AddPayrollForm.value.AddpayTypeId;
     //  this.dropdowndataObj.payTypeDetailId = selectDatata.data.paymentTypesDetail[0] == undefined ? null: selectDatata.data.paymentTypesDetail[0].payTypeDetailId;
     this.dropdowndataObj.payTypeDetailId = selectDatata.data.payTypeId;
-     this.dropdowndataObj.payTypeDetailInc = 0;
-     this.dropdowndataObj.employeePercent = selectDatata.data.employeePercent;
-     this.dropdowndataObj.employerPercent = selectDatata.data.employerPercent;
-     this.dropdowndataObj.active = selectDatata.data.paymentTypesDetail[0] == undefined ? false : selectDatata.data.paymentTypesDetail[0].active;
-     this.dropdowndataObj.lockedBy = selectDatata.data.lockedBy;
-     this.dropdowndataObj.lockTs = selectDatata.data.lockTs;
-     this.dropdowndataObj.branchCode = selectDatata.data.branchCode;
+    this.dropdowndataObj.payTypeDetailInc = 0;
+    this.dropdowndataObj.employeePercent = selectDatata.data.employeePercent;
+    this.dropdowndataObj.employerPercent = selectDatata.data.employerPercent;
+    this.dropdowndataObj.active = selectDatata.data.paymentTypesDetail[0] == undefined ? false : selectDatata.data.paymentTypesDetail[0].active;
+    this.dropdowndataObj.lockedBy = selectDatata.data.lockedBy;
+    this.dropdowndataObj.lockTs = selectDatata.data.lockTs;
+    this.dropdowndataObj.branchCode = selectDatata.data.branchCode;
     //  this.dropdowndataObj.operatorId = this.AddPayrollForm.value?.NewLineoperatorId;
-     debugger
+    debugger
 
 
-//      this.dropdowndataObj.operatorId = this.PayrollForm.value?.NewLineoperatorId;
-//      debugger
+    //      this.dropdowndataObj.operatorId = this.PayrollForm.value?.NewLineoperatorId;
+    //      debugger
 
 
-// // For Edit
-//  this.dropdowndataObj.operatorId=this.PayrollForm.value?.EditNewLineInput;
-//  this.dropdowndataObj.operatorId=this.PayrollForm.value?.EditoperatorId;
+    // // For Edit
+    //  this.dropdowndataObj.operatorId=this.PayrollForm.value?.EditNewLineInput;
+    //  this.dropdowndataObj.operatorId=this.PayrollForm.value?.EditoperatorId;
 
 
-     return this.dropdowndataObj;
+    return this.dropdowndataObj;
   }
 
-  saveEditData(selectDatata:any,indexNo:number)
-{
-  debugger
-  this.dropdowndataObj = new paymentTypesDetail();
-  this.dropdowndataObj.companyId = selectDatata.data.companyId;
-  this.dropdowndataObj.divisionId = selectDatata.data.divisionId;
-  this.dropdowndataObj.departmentId = selectDatata.data.departmentId;
-  this.dropdowndataObj.payTypeId = this.PayrollForm.value.payTypeId;
-  this.dropdowndataObj.payTypeDetailId = selectDatata.data.payTypeId;
-  this.dropdowndataObj.payTypeDetailInc = 0;
-  this.dropdowndataObj.employeePercent = selectDatata.data.employeePercent;
-  this.dropdowndataObj.employerPercent = selectDatata.data.employerPercent;
-  this.dropdowndataObj.active = selectDatata.data.paymentTypesDetail[0] == undefined ? false : selectDatata.data.paymentTypesDetail[0].active;
-  this.dropdowndataObj.lockedBy = selectDatata.data.lockedBy;
-  this.dropdowndataObj.lockTs = selectDatata.data.lockTs;
-  this.dropdowndataObj.branchCode = selectDatata.data.branchCode;
-  this.dropdowndataObj.operatorId = this.PayrollForm.value?.["EditLineoperatorId"+(indexNo)];
-  // this.dropdowndataObj.operatorId = this.PayrollForm.controls["EditLineoperatorId1"].value;
-  debugger
+  saveEditData(selectDatata: any, indexNo: number) {
+    debugger
+    this.dropdowndataObj = new paymentTypesDetail();
+    this.dropdowndataObj.companyId = selectDatata.data.companyId;
+    this.dropdowndataObj.divisionId = selectDatata.data.divisionId;
+    this.dropdowndataObj.departmentId = selectDatata.data.departmentId;
+    this.dropdowndataObj.payTypeId = this.PayrollForm.value.payTypeId;
+    this.dropdowndataObj.payTypeDetailId = selectDatata.data.payTypeId;
+    this.dropdowndataObj.payTypeDetailInc = 0;
+    this.dropdowndataObj.employeePercent = selectDatata.data.employeePercent;
+    this.dropdowndataObj.employerPercent = selectDatata.data.employerPercent;
+    this.dropdowndataObj.active = selectDatata.data.paymentTypesDetail[0] == undefined ? false : selectDatata.data.paymentTypesDetail[0].active;
+    this.dropdowndataObj.lockedBy = selectDatata.data.lockedBy;
+    this.dropdowndataObj.lockTs = selectDatata.data.lockTs;
+    this.dropdowndataObj.branchCode = selectDatata.data.branchCode;
+    this.dropdowndataObj.operatorId = this.PayrollForm.value?.["EditLineoperatorId" + (indexNo)];
+    // this.dropdowndataObj.operatorId = this.PayrollForm.controls["EditLineoperatorId1"].value;
+    debugger
 
-  return this.dropdowndataObj;
-}
+    return this.dropdowndataObj;
+  }
 
-deleteRow(index:any) {
-  debugger;
-  // this.dynamicArrayData.remove(index, 1);
-  this.dynamicArrayData.splice(index, 1);
-}
+  deleteRow(index: any) {
+    debugger;
+    // this.dynamicArrayData.remove(index, 1);
+    this.dynamicArrayData.splice(index, 1);
+  }
 
   //#region for edit/Update payroll paytype
   editPayrollTypeForm(addPayrolTypeData: any) {
@@ -415,15 +410,14 @@ deleteRow(index:any) {
     this.editData = addPayrolTypeData.data
     this.editPaytypesDetailLength = addPayrolTypeData.data.paymentTypesDetail.length;
 
-    if(this.editPaytypesDetailLength)
-    {
+    if (this.editPaytypesDetailLength) {
       this.showNewLineContainer = true;
-      this.dynamicArrayData.length  = this.editData.paymentTypesDetail.length;
+      this.dynamicArrayData.length = this.editData.paymentTypesDetail.length;
       debugger
       for (let i = 0; i < this.editPaytypesDetailLength; i++) {
 
-        this.PayrollForm.controls["EditNewLineInput"+(i+1)].setValue(addPayrolTypeData.data.paymentTypesDetail[i].payTypeId);
-        this.PayrollForm.controls["EditLineoperatorId"+(i+1)].setValue(addPayrolTypeData.data.paymentTypesDetail[i].operatorId);
+        this.PayrollForm.controls["EditNewLineInput" + (i + 1)].setValue(addPayrolTypeData.data.paymentTypesDetail[i].payTypeId);
+        this.PayrollForm.controls["EditLineoperatorId" + (i + 1)].setValue(addPayrolTypeData.data.paymentTypesDetail[i].operatorId);
       }
       debugger
     }
@@ -483,17 +477,17 @@ deleteRow(index:any) {
 
     if (this.dropdownDataArray.length == 0) {
       this.payrollObj.paymentTypesDetail = [];
-    }else{
+    } else {
       this.payrollObj.paymentTypesDetail = this.dropdownDataArray;
       this.dynamicArrayData.splice(0);  //clearArray
 
- }
+    }
 
-debugger
+    debugger
     this.payrollService.addAndEditPayroll(this.payrollObj).subscribe(res => {
       debugger;
       if (res.status == "Success") {
-debugger;
+        debugger;
         this.swalService.SwalAlertMessage(true, "success", "Your Data Updated Succusfully.", true, false);
         this.getAllPayroll();
         this.closeUpdateModal();
@@ -538,24 +532,24 @@ debugger;
 
 
   //#region  for onSelectClick dropdown item select
-  onSelectClick(selectData: any,indexNo:number) {
+  onSelectClick(selectData: any, indexNo: number) {
 
     debugger
     this.onSelectClickDataObj = this.saveData(selectData)
 
-    this.AddPayrollForm.controls["AddNewLineInput"+(indexNo)].setValue(selectData.data.payTypeId)
+    this.AddPayrollForm.controls["AddNewLineInput" + (indexNo)].setValue(selectData.data.payTypeId)
     //this.PayrollForm.controls['EditNewLineInput'].setValue(selectData.data.payTypeId);
   }
   //#endregion
 
- //#region  onEditSelectClick
-  onEditSelectClick(selectData: any,indexNo:number) {
+  //#region  onEditSelectClick
+  onEditSelectClick(selectData: any, indexNo: number) {
     debugger;
-    this.PayrollForm.controls["EditNewLineInput"+(indexNo)].setValue(selectData.data.payTypeId)
-    this.onSelectClickDataObj = this.saveEditData(selectData,indexNo)
+    this.PayrollForm.controls["EditNewLineInput" + (indexNo)].setValue(selectData.data.payTypeId)
+    this.onSelectClickDataObj = this.saveEditData(selectData, indexNo)
     debugger
   }
-//#endregion
+  //#endregion
 
   //#region For Close mopdalpopup button
   private closeModal(): void {
@@ -587,7 +581,7 @@ debugger;
   //#endregion
 
   //#region For show new line
-    showNewLine() {
+  showNewLine() {
     this.showNewLineContainer = true;
     this.addRow();
   }
@@ -737,25 +731,25 @@ debugger;
     }
     // return "";
   }
-//#endregion
+  //#endregion
   //#region work for pdf xlsx
- // onExporting(e: any) {
-    // debugger;
-    // const lastPoint = { x: 0, y: 0 };
-    // debugger;
-    // if (e.format == "pdf") {
-    //   debugger
-    //   //Work for PDF
-    //   const doc = new jsPDF();
-    //   PDFGrid({
-    //     jsPDFDocument: doc,
-    //     component: e.component,
-    //     indent: 5,
-    //   }).then(() => {
+  // onExporting(e: any) {
+  // debugger;
+  // const lastPoint = { x: 0, y: 0 };
+  // debugger;
+  // if (e.format == "pdf") {
+  //   debugger
+  //   //Work for PDF
+  //   const doc = new jsPDF();
+  //   PDFGrid({
+  //     jsPDFDocument: doc,
+  //     component: e.component,
+  //     indent: 5,
+  //   }).then(() => {
 
-    //     doc.save('Payroll.pdf');
-    //   });
-    // }
+  //     doc.save('Payroll.pdf');
+  //   });
+  // }
 
   //   // else if (e.format == "xlsx") {
   //   //   //Work for xlsx
@@ -804,7 +798,7 @@ debugger;
 
   // }
 
-  onExporting (e:any) {
+  onExporting(e: any) {
     debugger;
     if (e.format == "pdf") {
       debugger
@@ -819,8 +813,8 @@ debugger;
         doc.save('Payroll.pdf');
       });
     }
- else if (e.format == "xlsx") {
-    //   //Work for xlsx
+    else if (e.format == "xlsx") {
+      //   //Work for xlsx
       debugger;
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet('PaymetDetails');
@@ -835,31 +829,31 @@ debugger;
       });
       e.cancel = true;
     }
-    else if(e.format== 'csv'){
-debugger;
-      // const workbook = new Workbook();
-       const workbook = new ExcelJS.Workbook();
-
-    const worksheet = workbook.addWorksheet('Employees');
-    //  DevExpress.excelExporter.exportDataGrid({
-     Csv({
-              component: e.component,
-        worksheet: worksheet
-    }).then(()=> {
-
-    workbook.csv.writeBuffer().then((buffer)=> {
+    else if (e.format == 'csv') {
       debugger;
-        saveAs(new Blob([buffer], { type: "application/octet-stream" }), "Report.csv");
-    });
-    });
+      // const workbook = new Workbook();
+      const workbook = new ExcelJS.Workbook();
 
-    e.cancel = true;
+      const worksheet = workbook.addWorksheet('Employees');
+      //  DevExpress.excelExporter.exportDataGrid({
+      Csv({
+        component: e.component,
+        worksheet: worksheet
+      }).then(() => {
+
+        workbook.csv.writeBuffer().then((buffer) => {
+          debugger;
+          saveAs(new Blob([buffer], { type: "application/octet-stream" }), "Report.csv");
+        });
+      });
+
+      e.cancel = true;
     }
-    else{
+    else {
       console.log('Error')
     }
 
-}
+  }
   //#endregion
 
   //#region for  Add New Multiple Lines Functionality
@@ -880,8 +874,7 @@ debugger;
   }
 
 
-  clearDropdownDataArray()
-  {
+  clearDropdownDataArray() {
     this.dropdownDataArray.splice(0);
 
     this.dynamicArrayData.splice(0);

@@ -5,9 +5,10 @@ import { exportDataGrid, exportDataGrid as XLSDataGrid } from 'devextreme/excel_
 import { exportDataGrid as csv, exportDataGrid as Csv } from 'devextreme/excel_exporter';
 import { exportDataGrid as PDFGrid } from 'devextreme/pdf_exporter';
 import { jsPDF } from 'jspdf';
-import   * as ExcelJS from 'exceljs';
+import * as ExcelJS from 'exceljs';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EmployeeSummaryReportsService } from 'src/app/Services/Reports-Service/employee-summary-reports.service';
 
@@ -39,9 +40,9 @@ export class MonthlySummaryReportComponent implements OnInit {
     this.getMonthlyAttendance();
   }
 
-//#region For Get Monthly Attendance Summary
+  //#region For Get Monthly Attendance Summary
   getMonthlyAttendance() {
-debugger;
+    debugger;
     this.StartMonth = this.MonthForm.value.startMonth;
     this.EndMonth = this.MonthForm.value.endMonth;
 
@@ -54,7 +55,7 @@ debugger;
       }
     });
   }
-//#endregion
+  //#endregion
 
   //#region FOR DATE VALIDATIONS
   dateLessThan(from: string, to: string) {
@@ -69,9 +70,9 @@ debugger;
       return {};
     }
   }
-//#endregion
+  //#endregion
 
-//#region work for Export PDF & XLSX CSV
+  //#region work for Export PDF & XLSX CSV
   // Export pdf & xlsx csv
   onExporting(e: any) {
 

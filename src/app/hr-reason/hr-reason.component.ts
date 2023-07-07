@@ -10,7 +10,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { SwalService } from 'src/app/Services/AleartPopUp/swal.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
-import  { saveAs} from 'file-saver-es';
+import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-hr-reason',
@@ -25,7 +26,7 @@ export class HrReasonComponent implements OnInit {
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
-  contentReady($event:any){}
+  contentReady($event: any) { }
   errorMessage = false;
   // MatPaginator Inputs
   length = 10;
@@ -43,7 +44,7 @@ export class HrReasonComponent implements OnInit {
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: HrReasonService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //hr reasons Form
     this.HrReasonForm = this.formBuilder.group({
@@ -57,14 +58,15 @@ export class HrReasonComponent implements OnInit {
       branchCode: new FormControl('', [Validators.required])
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
     setTimeout(() => {
-      console.log('Test')}, 300);
+      console.log('Test')
+    }, 300);
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -74,24 +76,24 @@ export class HrReasonComponent implements OnInit {
     this.page = 1;
     this.getAll();
   }
-//#endregion
-onExporting(e: { component: any; cancel: boolean; }) {
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet('hrData');
+  //#endregion
+  onExporting(e: ExportingEvent) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('hrData');
 
 
-  exportDataGrid({
-    component: e.component,
-    worksheet,
-    autoFilterEnabled:true,
-  }) .then(() =>{
-    workbook.xlsx.writeBuffer().then((buffer) => {
-      saveAs (new Blob([buffer],{ type: 'application/octet-stream' }), 'DataGrid.xlsx');
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      autoFilterEnabled: true,
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+      });
     });
-  });
-  e.cancel = true;
-}
-//#region Close Modal PopUp
+    e.cancel = true;
+  }
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -101,9 +103,9 @@ onExporting(e: { component: any; cancel: boolean; }) {
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All hr reasons
+  //#region Get All hr reasons
 
   getAll() {
     this.hrData = [];
@@ -115,7 +117,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -136,7 +138,7 @@ onExporting(e: { component: any; cancel: boolean; }) {
     this.HrReasonForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editHrReason(hrModel: HrReason) {

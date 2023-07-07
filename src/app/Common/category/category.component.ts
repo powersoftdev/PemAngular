@@ -7,6 +7,7 @@ import { CategoryService } from 'src/app/Services/category.service';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
+import { ExportingEvent } from 'devextreme/ui/data_grid';
 
 @Component({
   selector: 'app-category',
@@ -14,15 +15,15 @@ import { saveAs } from 'file-saver-es';
   styleUrls: ['./category.component.css']
 })
 export class CategoryComponent implements OnInit {
-onExporting($event: any) {
-throw new Error('Method not implemented.');
-}
+  onExporting($event: any) {
+    throw new Error('Method not implemented.');
+  }
 
   dataGrid: any;
   contentReady($event: any) {
-  throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
-  
+
 
   @ViewChild('closeBtn') closeBtn: ElementRef;
   @ViewChild('closeupdatebtn') closeupdatebtn: any;
@@ -31,30 +32,30 @@ throw new Error('Method not implemented.');
   public nameSearch: string = '';
   // searchedKeyword: string;
   searchKey: string = "";
-  
-   // MatPaginator Inputs
-   length = 10;
-   pageSize = 10;
-   pageSizeOptions: number[] = [5, 10, 25, 100];
- 
-   // MatPaginator Output
-   pageEvent: PageEvent;
- 
-   CategoryForm: FormGroup;
-   editData: any;
-   delData: any;
-   catobj: Category = new Category();
-   //CategoryId: any;
-   // categoryData: Array<any> = [];
-   categoryData: any;
- 
-   // API_URL: string = environment.API_URL;
+
+  // MatPaginator Inputs
+  length = 10;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
+  CategoryForm: FormGroup;
+  editData: any;
+  delData: any;
+  catobj: Category = new Category();
+  //CategoryId: any;
+  // categoryData: Array<any> = [];
+  categoryData: any;
+
+  // API_URL: string = environment.API_URL;
   // token: string = environment.loginToken;
   // childModal: any;
   count: number = 0;
   tablesize: number = 15;
   tablesizes: any = [10, 20, 50, 100, 150, 200, 250]
-  public page:number=1;
+  public page: number = 1;
   constructor(private service: CategoryService, private formBuilder: FormBuilder, private swalService: SwalService) {
     //Category Form
     this.CategoryForm = this.formBuilder.group({
@@ -69,12 +70,12 @@ throw new Error('Method not implemented.');
 
     });
   }
-    ngOnInit(): void {
+  ngOnInit(): void {
 
     this.getAll();
 
   }
-//#region Pagination
+  //#region Pagination
   onTableDataChange(event: any) {
     this.page = event;
     this.getAll();
@@ -84,9 +85,9 @@ throw new Error('Method not implemented.');
     this.page = 1;
     this.getAll();
   }
-//#endregion
+  //#endregion
 
-//#region Close Modal PopUp
+  //#region Close Modal PopUp
   private closeModal(): void {
     this.closeBtn.nativeElement.click();
   }
@@ -96,9 +97,9 @@ throw new Error('Method not implemented.');
   private closeDeleteModal(): void {
     this.closedeletebtn.nativeElement.click();
   }
-//#endregion
+  //#endregion
 
-//#region Get All Category
+  //#region Get All Category
 
   getAll() {
     this.categoryData = [];
@@ -110,7 +111,7 @@ throw new Error('Method not implemented.');
     }
     );
   }
-//#endregion
+  //#endregion
 
   //#region Add button  click  method
   Add() {
@@ -131,7 +132,7 @@ throw new Error('Method not implemented.');
     this.CategoryForm.reset();
 
   }
-//#endregion
+  //#endregion
 
   //#region Edit button pancel click  method
   editCategory(catModel: Category) {
